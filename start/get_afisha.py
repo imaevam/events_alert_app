@@ -1,14 +1,7 @@
 import requests
 from bs4 import BeautifulSoup as bs
 
-def get_html(url):
-    try:
-        result = requests.get(url)
-        result.raise_for_status()
-        return result.text
-    except(requests.RequestException, ValueError):
-        print("Сетевая ошибка")
-        return False
+#функция с requests
 
 def nearest_events(html):
     soup = bs(html, 'html.parser')
@@ -32,3 +25,5 @@ if __name__ == "__main__":
     html = get_html('https://afisha.ru')
     if html:
         nearest_events(html)
+
+        #как я поняла, дату и цену можно достать у каждого события, если пройти по каждой ссылке по отдельности. Может можно как-то по-другому?
