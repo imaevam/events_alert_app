@@ -66,7 +66,7 @@ def getPayload(soup):
                 for session in sessions:
                     time = session.find('time', {'class': 'timetable__item-time'}).text
                     price = session.find('span', {'class': 'timetable__item-price'}).text
-                print(f'In {place} at {time} costs {price}')
+                print(f'В {place} в {time} {price}')
     except (UnboundLocalError, ValueError, AttributeError):
         print("None")
     
