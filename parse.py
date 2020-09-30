@@ -8,8 +8,12 @@ HEDERS = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWe
 HOST = 'https://www.afisha.ru'
 
 def get_html(url, params=None):
-    r = requests.get(url, headers=HEDERS, params=params)
-    return r
+    try:
+        r = requests.get(url, headers=HEDERS, params=params)
+        r.raise_for_status()
+        return r
+    except(requests.RequestException, ValueError):
+        return False
 
 # собирает список всех ссылок на события с 1 страныцы раздела
 def link_dict(html):
@@ -34,8 +38,10 @@ def events_data(html):
     final_data = []
     for link in d:
         ev_kod = get_html(link)
-        final_data.append(get_content(ev_kod.text, link))
-    print(final_data)
+        if ev_kod.status_code == 200:
+            final_data.append(get_content(ev_kod.text, link))
+        else:
+            continue
     return final_data
 
 # преобразует список словарей с html data в список словарей с упорядоченными данными
@@ -67,4 +73,5 @@ def parse():
     else:
         print('Error')
 
-parse()
+if __name__ == '__main__':
+    parse()
