@@ -1,7 +1,7 @@
+import requests
 from bs4 import BeautifulSoup as bs
 import urllib.request as urlreq
 import urllib.parse as urlparse
-import pprint
 
 all_links = []
 movie_links = []
@@ -16,39 +16,39 @@ MAIN_URL = "https://afisha.ru"
 # поправить заголовки
 # Галерея фото -> byte подумать как передать картинки?
 
-def isCorrectLink(url, category):
-    # .../movie/123456/schedule
-    responseParams = url.split("/")
-    if responseParams[len(responseParams)-2].isdigit():  #проверка ссылок на валидность
+def check_links(url, category): # .../movie/123456/
+    response_params = url.split("/")
+    if response_params[-2].isdigit():  #проверка ссылок на валидность
         return True
     return False
 
-def getAllLinks(soup): # сортировка ссылок по категориям
+def collect_links(soup): # сортировка ссылок по категориям
     for link in soup.find_all('a', href=True):
-        link = 'afisha.ru' + link['href']
+        url = link['href']
+        link = f'afisha.ru{url}'
         all_links.append(link)
     for link in all_links:
-        if  '/movie/' in link:
-            if isCorrectLink(link, 'movie/'):
+        if '/movie/' in link:
+            if check_links(link, 'movie/'):
                 movie_links.append(link)
         elif '/concert/' in link:
-            if isCorrectLink(link, 'concert/'):
+            if check_links(link, 'concert/'):
                concert_links.append(link)
         elif '/performance/' in link:
-            if isCorrectLink(link, 'performance/'):
+            if check_links(link, 'performance/'):
                 performance_links.append(link)
         elif '/exhibition/' in link:
-            if isCorrectLink(link, 'exhibition/'):
+            if check_links(link, 'exhibition/'):
                 exhibition_links.append(link)
 
     all_categories.append({   # список словарей, разделенный на категории, значение тоже список
-        'movie':movie_links,
+        'movie': movie_links,
         'concert': concert_links,
         'performance': performance_links,
         'exhibition': exhibition_links
     })
 
-def getPayload(soup):
+def get_payload(soup):
     months = soup.find_all('div', {'class': 'calendar-simple__month'})
     print(months)
     #title = soup.find_all('h1').text  Как достать заголовок? 
@@ -66,21 +66,20 @@ def getPayload(soup):
                 for session in sessions:
                     time = session.find('time', {'class': 'timetable__item-time'}).text
                     price = session.find('span', {'class': 'timetable__item-price'}).text
-                print(f'In {place} at {time} costs {price}')
+                print(f'В {place} в {time} {price}')
     except (UnboundLocalError, ValueError, AttributeError):
         print("None")
     
-def startWork(url):    
+def start_work(url):    
     response = urlreq.urlopen(url)
     soup = bs(response, parser, from_encoding=response.info().get_param('charset'))
-    getAllLinks(soup)
+    collect_links(soup)
     for category in all_categories:
         for lst in category.values():
             for link in lst:
-                newRes = urlreq.urlopen('https://' + link)
-                soup = bs(newRes, parser)
-                getPayload(soup)
-
+                new_response = urlreq.urlopen('https://' + link)
+                soup = bs(new_response, parser)
+                get_payload(soup)
 
 if __name__ == "__main__":
-    startWork(MAIN_URL)
+    start_work(MAIN_URL)
