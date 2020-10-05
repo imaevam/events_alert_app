@@ -1,10 +1,14 @@
 from flask import Flask, render_template
+from model import db
 
-app = Flask(__name__)
 
-@app.route('/')
-def render_main():
-    return render_template('start.html')
+def create_app():
+    app = Flask(__name__)
+    #config
+    db.init_app(app)
 
-if __name__ == "__main__":
-    app.run(debug=True)
+    @app.route('/')
+    def index():
+        return render_template('start.html')
+
+    return app

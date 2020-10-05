@@ -43,6 +43,9 @@ class User(db.Model, Mixin):   #множественное наследован�
         self.registered_on = datetime.datetime.now()
         self.role = role
 
+    def __repr__(self):
+        return '<User {}>'.format(self.username)
+
     #методы класа
 
     #отдельно class LoginForm \ RegistrationForm ?
