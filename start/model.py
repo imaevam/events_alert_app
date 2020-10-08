@@ -5,24 +5,25 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
-class Event(db.Model): # атрибуты, поля в таблице
-    id = db.Column(db.Integer, primary_key=True) # целое число, первичный ключ, бд будет его индексировать
-    title = db.Column(db.String, nullable=False) # nullable -может ли это значение не быть в сопоставляемых данных, просим БД проверять нас
-    url = db.Column(db.String, unique=True, nullable=False) #unique - url у каждой новости уникальный
+class Event(db.Model): 
+    id = db.Column(db.Integer, primary_key=True) 
+    name = db.Column(db.String(50), nullable=False)
+    url = db.Column(db.String(100), unique=True, nullable=False)
     date = db.Column(db.Date, nullable=False)
-    text = db.Column(db.Text, nullable=False)
-    place = db.Column(db.String, nullable=True)
-    price = db.Column(db.DECIMAL(10, 2), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    place = db.Column(db.String(50), nullable=True)
+    price = db.Column(db.DECIMAL(10, 2), nullable=True)
+    genre = db.Column(db.String(50), nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('caregory.id'))
     resourse_id = db.Column(db.Integer, db.ForeignKey('resourse.id'))
 
-    def __repr__(self): # магический метод, чтобы в дальнейшем при получении обьекта понимать что это за объект
+    def __repr__(self): 
         return '<Events {} {}>'.format(self.title, self.url)
 
 
-class User(db.Model, UserMixin):   #множественное наследование; def is_authenticated и тд
+class User(db.Model, UserMixin):   
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), index=True, unique=True, nullable=False) # ограничение по длине; те, колонки по которым в дальнейшем будем фильтровать запросы имеет смысл делать индексами, т.к. поиск по индексу быстрее
+    username = db.Column(db.String(50), index=True, unique=True, nullable=False) 
     password = db.Column(db.String(50), nullable=False)
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
