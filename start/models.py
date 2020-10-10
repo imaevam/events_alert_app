@@ -15,9 +15,9 @@ class Event(db.Model):
     price = db.Column(db.DECIMAL(10, 2), nullable=True)
     genre = db.Column(db.String(50), nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('caregory.id'))
-    category = db.relationship('Category', backref='events')
+    category = relationship('Category', backref='events')
     resource_id = db.Column(db.Integer, db.ForeignKey('resource.id'))
-    resource = db.relationship('Resource', backref='events')
+    resource = relationship('Resource', backref='events')
 
 
     def __repr__(self): 
