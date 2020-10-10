@@ -31,15 +31,12 @@ class User(db.Model, UserMixin):
     profile_picture = db.Column(db.String(255), nullable=True)
     gender = db.Column(db.Enum('male', 'female', name='gender'))  #???
     birthday = db.Column(db.Date, nullable=False)
-    notify_bday = db.Column(db.Boolean)
-    registered_on = db.Column(db.Date, nullable=False)
-    last_activity = db.Column(db.Date, nullable=False)
+    notify_on_bithday = db.Column(db.Boolean)
+    registered_on = db.Column(db.DateTime, nullable=False)
+    last_activity = db.Column(db.DateTime, nullable=False)
     role = db.Column(db.String(10), index=True)
-    resourse_id = db.Column(db.Inteder, db.ForeignKey('resourse.id'))
+    resource_id = db.Column(db.Inteder, db.ForeignKey('resource.id'))
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-    
     def set_password(self, password):
         self.password = generate_password_hash(password)
 
@@ -52,16 +49,15 @@ class User(db.Model, UserMixin):
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), index=True, nullable=False)
-    resourse_id = db.Column(db.Integer, db.ForeignKey('resourse.id'))
+    resourse_id = db.Column(db.Integer, db.ForeignKey('resource.id'))
 
     def __repr__(self):
         return '<Category: {}>'.format(self.name_category)
 
 
-class Resourse(db.Model):
+class Resource(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), index=True, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
-        return '<Resourse: {}>'.format(self.name_resourse)
+        return '<Resource: {}>'.format(self.name_resourse)
