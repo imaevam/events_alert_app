@@ -21,11 +21,17 @@ def save_img(img_url, path_to_save, category_lst):
         with open(path_to_save, 'wb') as handler:
             handler.write(response.content)
     return save_path # импортировать в model
-     
+
+def get_description(url): # только movies
+    url = url[1:]
+    data_descr = get_payload(url)['MovieCard']['Info']['Description']
+    return data_descr
+
 def convert_date(date): 
     date_format = '%Y-%m-%dT%H:%M:%S'
     date_update = datetime.datetime.strptime(date, date_format)
     return date_update
+    
     
 def collect_details(category_lst):
     all_data = [] 
@@ -42,7 +48,7 @@ def collect_details(category_lst):
         place = tile['Notice']['PlaceUrl']['Name']
         price = tile['ScheduleInfo']['MinPrice']
         url = tile['Url']
-        description = tile['Verdict']
+        description = get_description(url)
         all_data.append({
             'name': name,
             'genre': genre,
@@ -51,7 +57,7 @@ def collect_details(category_lst):
             'address': address,
             'place': place,
             'price': price,
-            'url': url, 
+            'url': url,
             'description': description
         })
     return all_data
