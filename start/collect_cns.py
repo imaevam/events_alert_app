@@ -4,7 +4,8 @@ import pprint
 
 if __name__ == "__main__":
     concert_lst = get_payload('msk/concerts/')['Widget']['CardsCarousels']
-    result = collect_details(concert_lst)
+    category = 'concert'
+    result = collect_details(concert_lst, category)
     pp = pprint.PrettyPrinter(indent=2)
     pp.pprint(result)
 

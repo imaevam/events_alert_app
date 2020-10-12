@@ -4,6 +4,7 @@ import pprint
 
 if __name__ == "__main__":
     movie_lst = get_payload('msk/cinema')['Widget']['CardsCarousels']
-    result = collect_details(movie_lst)
+    category = 'movie'
+    result = collect_details(movie_lst, category)
     pp = pprint.PrettyPrinter(indent=2)
     pp.pprint(result)
