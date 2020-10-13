@@ -5,6 +5,7 @@ import os
 import requests
 import pprint
 
+cur_dir = 'C:\\projects\\final\\images'
 
 def get_payload(url):
     url = f"https://afisha.ru/{url}"
@@ -15,11 +16,11 @@ def save_img(img_url, path_to_save, category_lst):
     if not os.path.exists(path_to_save):
         os.mkdir(path_to_save)
     response = requests.get(img_url)
-    image_name = response.split('/')[-1]
+    image_name = img_url.split('/')[-1]
     save_path = os.path.join(path_to_save, image_name) # (os.getcwd(), filename)
     if response.status_code == 200:
-        with open(path_to_save, 'wb') as handler:
-            handler.write(response.content)
+        with open(save_path, 'wb') as handler:
+            handler.write(response.context)
     return save_path # импортировать в model
 
 
@@ -33,11 +34,13 @@ def get_description(url, category):
     url = url[1:]
     if category == 'movie':
         data_descr = get_payload(url)['MovieCard']['Info']['Description']
-    elif category == 'exhibition': #что-то делаю не то  TypeError: 'NoneType' object is not subscriptable
-        if get_payload(url)['ExhibitionInfo']['DistributorInfo'] == '':
-            data_descr = get_payload(url)['ExhibitionInfo']['Description']     # иногда бывает 'description': '',
-        else:
+    elif category == 'exhibition': # TypeError: 'NoneType' object is not subscriptable
+        if get_payload(url)['ExhibitionInfo']['DistributorInfo'] == None:
+            data_descr = get_payload(url)['ExhibitionInfo']['Description']     # иногда бывает 'description': '', 'DistributorInfo': None
+        elif get_payload(url)['ExhibitionInfo']['Description'] == '':
             data_descr = get_payload(url)['ExhibitionInfo']['DistributorInfo']['Text']
+        else: 
+            data_descr = None
     elif category == 'theatre':
         data_descr = get_payload(url)['PerformanceInfo']['Description']
     elif category == 'concert':
@@ -61,6 +64,7 @@ def collect_details(category_lst, category):
         price = tile['ScheduleInfo']['MinPrice']
         url = tile['Url']
         description = get_description(url, category)
+        img_url = tile['Image630x315']['Url']
         all_data.append({
             'category': category,
             'name': name,
@@ -71,6 +75,7 @@ def collect_details(category_lst, category):
             'place': place,
             'price': price,
             'url': url,
-            'description': description
+            'description': description,
+            'img_path': img_url
         })
     return all_data
