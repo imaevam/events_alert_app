@@ -67,7 +67,12 @@ def collect_details(category_lst, category):
         price = tile['ScheduleInfo']['MinPrice']
         url = tile['Url']
         description = get_description(url, category)
+<<<<<<< HEAD
         save_event(name, genre, date_start, date_finish, address, place, price, url, description)
+=======
+    save_event(name, genre, date_start, date_finish, address, place, price, url, description)
+      
+>>>>>>> 39f461a5b88b00babd4b18f7bf9a0f91ae2eae44
 
 
 def save_event(name, genre, date_start, date_finish, address, place, price, url, description):
