@@ -1,6 +1,6 @@
 from flask import Blueprint, flash, render_template, redirect, url_for
 
-from webapp.db import db
+from webapp.models import db
 from webapp.user.forms import LoginForm
 from webapp.user.models import User
 from flask_login import current_user, login_user, logout_user
@@ -14,7 +14,7 @@ def login():
         return redirect(url_for('index'))
     title = 'Авторизация'
     login_form = LoginForm()
-    return render_template('user/login.html', page_title=title, form=login_form)
+    return render_template('login.html', page_title=title, form=login_form)
 
 
 @blueprint.route('/process-login', methods=['POST'])
@@ -28,7 +28,7 @@ def process_login():
             return redirect(url_for('index'))
 
     flash('Неправильное имя пользователя или пароль')
-    return redirect(url_for('user/login'))
+    return redirect(url_for('user.login'))
 
 
 @blueprint.route('/logout')

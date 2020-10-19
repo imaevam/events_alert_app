@@ -3,7 +3,8 @@ import json
 import os
 import pprint
 import requests
-from webapp.models import db, Event
+from webapp.models import db
+from webapp.event.models import Event
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -52,7 +53,7 @@ def get_description(url, category):
 
 def collect_details(category_lst, category):
     tiles = [tile for item in category_lst for tile in item['Tiles']]
-    events = []
+    #events = []
     for tile in tiles:
         name = tile['Name']
         genre = tile['Badge']
@@ -66,8 +67,7 @@ def collect_details(category_lst, category):
         price = tile['ScheduleInfo']['MinPrice']
         url = tile['Url']
         description = get_description(url, category)
-    save_event(name, genre, date_start, date_finish, address, place, price, url, description)
-        save_events(name, genre, date_start, date_finish, address, place, price, url, description)
+        save_event(name, genre, date_start, date_finish, address, place, price, url, description)
 
 
 def save_event(name, genre, date_start, date_finish, address, place, price, url, description):
