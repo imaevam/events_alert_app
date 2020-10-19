@@ -6,12 +6,9 @@ from bs4 import BeautifulSoup
 from webapp.model import db, Event
 
 
-URL = 'https://www.afisha.ru/msk/'
-HEDERS = {
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36',
-    'assept': '*/*'
-    }
-HOST = 'https://www.afisha.ru'
+url = current_app.config['URL']
+heders = current_app.config['HEDERS']
+host = current_app.config['HOST']
 
 event_list = ['schedule_cinema/'] #'schedule_concert/',
 
@@ -19,7 +16,7 @@ event_list = ['schedule_cinema/'] #'schedule_concert/',
 def get_html(url, params=''):
     try:
         #r = requests.get(url, headers={'Accept': 'application/json'}).json()
-        r = requests.get(url, headers=HEDERS, params=params)
+        r = requests.get(url, headers=heders, params=params)
         r.raise_for_status()
         return r
     except(requests.RequestException, ValueError):
@@ -31,7 +28,7 @@ def link_dict(html):
     soup = BeautifulSoup(html,'html.parser')
     d_links = []
     for link in soup.find_all('a', class_='_1F19s'):
-        d_links.append(HOST + link.get('href'))
+        d_links.append(host + link.get('href'))
     return d_links
 
 # pages count
@@ -95,7 +92,7 @@ def get_content(ev_kod, link):
 
 def parse():
     for catgory in event_list:
-        url_category = URL + catgory
+        url_category = url + catgory
         html = get_html(url_category)
         #print(html.status_code)
         if html.status_code == 200:

@@ -8,7 +8,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
-    <title> {{ page_title }} </title>
+    <title> {{ title }} </title>
   </head>
   <body>
     <div class='conteiner'>
@@ -36,7 +36,7 @@
         <div class='col-3'>
             Погода, реклама 
         </div>
-        <div style="float:left; margin: 30px; padding: 20px;" class="f1 box"> Сейчас в кино</div>
+        <div style="float:left; margin: 30px; padding: 20px;" class="f1 box"> {{ events }} </div>
         <div style="float:left; margin: 30px; padding: 20px;" class="f2 box"> Грядущие спектакли</div>
         <div style="float:left; margin: 30px; padding: 20px;" class="f3 box"> Актуальные экспозиции</div>
         <div style="float:left; margin: 30px; padding: 20px;" class="f4 box"> Мои избранные события</div>
