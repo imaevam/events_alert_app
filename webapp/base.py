@@ -5,9 +5,7 @@ import pprint
 import requests
 from webapp.models import db, Event
 from sqlalchemy.exc import IntegrityError
-
-
-#cur_dir = 'C:\\projects\\final\\images'
+from sqlalchemy.orm import Session
 
 
 def get_payload(url):
@@ -23,8 +21,8 @@ def save_img(img_url, path_to_save, category_lst):
     save_path = os.path.join(path_to_save, image_name) # (os.getcwd(), filename)
     if response.status_code == 200:
         with open(save_path, 'wb') as handler:
-            handler.write(response.context)
-    return save_path # импортировать в model
+            handler.write(response.content)
+    return save_path 
 
 
 def convert_date(date): 
@@ -35,24 +33,26 @@ def convert_date(date):
 
 def get_description(url, category):
     url = url[1:]
+    main_func = get_payload(url)
     if category == 'movie':
-        data_descr = get_payload(url)['MovieCard']['Info']['Description']
+        data_descr = main_func['MovieCard']['Info']['Description']
     elif category == 'exhibition':
-        if get_payload(url)['ExhibitionInfo']['DistributorInfo'] == None:
-            data_descr = get_payload(url)['ExhibitionInfo']['Description']     # иногда бывает 'description': '', 'DistributorInfo': None
-        elif get_payload(url)['ExhibitionInfo']['Description'] == '':
-            data_descr = get_payload(url)['ExhibitionInfo']['DistributorInfo']['Text']
+        if main_func['ExhibitionInfo']['DistributorInfo'] is None:
+            data_descr = main_func['ExhibitionInfo']['Description']
+        elif main_func['ExhibitionInfo']['Description'] == '':
+            data_descr = main_func['ExhibitionInfo']['DistributorInfo']['Text']
         else: 
             data_descr = None
     elif category == 'theatre':
-        data_descr = get_payload(url)['PerformanceInfo']['Description']
+        data_descr = main_func['PerformanceInfo']['Description']
     elif category == 'concert':
-        data_descr = get_payload(url)['ConcertInfo']['Description']
+        data_descr = main_func['ConcertInfo']['Description']
     return data_descr
     
 
 def collect_details(category_lst, category):
     tiles = [tile for item in category_lst for tile in item['Tiles']]
+    events = []
     for tile in tiles:
         name = tile['Name']
         genre = tile['Badge']
@@ -61,20 +61,25 @@ def collect_details(category_lst, category):
             date_start, date_finish = convert_date(date_min), convert_date(date_max)
         else: 
             date_start, date_finish = None, None
-        address = tile['Notice']['PlaceUrl']['Address']  # TypeError: 'NoneType'
-        place = tile['Notice']['PlaceUrl']['Name'] # TypeError: 'NoneType'
+        address = tile['Notice']['PlaceUrl']['Address'] 
+        place = tile['Notice']['PlaceUrl']['Name'] 
         price = tile['ScheduleInfo']['MinPrice']
         url = tile['Url']
         description = get_description(url, category)
-        #img_url = tile['Image630x315']['Url']
+    save_event(name, genre, date_start, date_finish, address, place, price, url, description)
         save_events(name, genre, date_start, date_finish, address, place, price, url, description)
-    
 
-def save_events(name, genre, date_start, date_finish, address, place, price, url, description):
-    new_events = Event(name=name, genre=genre, date_start=date_start, date_finish=date_finish,
-    address= address, place=place, price=price, url=url, description=description)
-    db.session.add(new_events)
+
+def save_event(name, genre, date_start, date_finish, address, place, price, url, description):
+    new_event = Event(name=name, genre=genre, date_start=date_start, date_finish=date_finish,
+    address=address, place=place, price=price, url=url, description=description)
+    db.session.add(new_event)
     try:
         db.session.commit()
     except IntegrityError:
         db.session.rollback()
+
+
+#img_url = tile['Image630x315']['Url']
+
+

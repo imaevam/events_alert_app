@@ -1,7 +1,5 @@
-from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy 
-from werkzeug.security import generate_password_hash, check_password_hash 
-from datetime import datetime
+
 
 db = SQLAlchemy()
 
@@ -16,6 +14,8 @@ class Event(db.Model):
     place = db.Column(db.String(50), nullable=False)
     address = db.Column(db.String(50), nullable=False)
     price = db.Column(db.DECIMAL(10, 2), nullable=True)
+    #img_url = db.Column(db.String(100), nullable=True)
+    #img_data = db.Column(db.LargeBinary)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
     category = db.relationship('Category', backref='events')
     resource_id = db.Column(db.Integer, db.ForeignKey('resource.id'))
@@ -25,30 +25,6 @@ class Event(db.Model):
         return '<Events {} {}>'.format(self.title, self.url)
 
 
-class User(db.Model, UserMixin):   
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), index=True, unique=True, nullable=False) 
-    password = db.Column(db.String(50), nullable=False)
-    first_name = db.Column(db.String(50), nullable=False)
-    last_name = db.Column(db.String(50), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    profile_picture = db.Column(db.String(255), nullable=True)
-    gender = db.Column(db.Enum('male', 'female', name='gender'))  #???
-    birthday = db.Column(db.Date, nullable=False)
-    notify_on_bithday = db.Column(db.Boolean)
-    registered_on = db.Column(db.DateTime, nullable=False)
-    last_activity = db.Column(db.DateTime, nullable=False)
-    role = db.Column(db.String(10), index=True)
-
-    def set_password(self, password):
-        self.password = generate_password_hash(password)
-
-    def check_password(self, password):
-        return check_password_hash(self.password, password) #true \ false
-
-    def __repr__(self):
-        return '<User {}>'.format(self.username)
-  
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), index=True, nullable=False)
