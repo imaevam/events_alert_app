@@ -67,7 +67,7 @@ def collect_details(category_lst, category):
         url = tile['Url']
         description = get_description(url, category)
     save_event(name, genre, date_start, date_finish, address, place, price, url, description)
-        save_events(name, genre, date_start, date_finish, address, place, price, url, description)
+      
 
 
 def save_event(name, genre, date_start, date_finish, address, place, price, url, description):
