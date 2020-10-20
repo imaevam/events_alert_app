@@ -14,18 +14,6 @@ def get_payload(url):
     return requests.get(url=url, headers={'Accept': 'application/json'}).json()
 
 
-def save_img(img_url, path_to_save, category_lst):
-    if not os.path.exists(path_to_save):
-        os.mkdir(path_to_save)
-    response = requests.get(img_url)
-    image_name = img_url.split('/')[-1]
-    save_path = os.path.join(path_to_save, image_name) # (os.getcwd(), filename)
-    if response.status_code == 200:
-        with open(save_path, 'wb') as handler:
-            handler.write(response.content)
-    return save_path 
-
-
 def convert_date(date): 
     date_format = '%Y-%m-%dT%H:%M:%S'
     date_update = datetime.datetime.strptime(date, date_format)
@@ -53,7 +41,7 @@ def get_description(url, category):
 
 def collect_details(category_lst, category):
     tiles = [tile for item in category_lst for tile in item['Tiles']]
-    #events = []
+    events = []
     for tile in tiles:
         name = tile['Name']
         genre = tile['Badge']
@@ -67,23 +55,10 @@ def collect_details(category_lst, category):
         price = tile['ScheduleInfo']['MinPrice']
         url = tile['Url']
         description = get_description(url, category)
-<<<<<<< HEAD
-        save_event(name, genre, date_start, date_finish, address, place, price, url, description)
-=======
-    save_event(name, genre, date_start, date_finish, address, place, price, url, description)
-      
->>>>>>> 39f461a5b88b00babd4b18f7bf9a0f91ae2eae44
-
-
-def save_event(name, genre, date_start, date_finish, address, place, price, url, description):
-    new_event = Event(name=name, genre=genre, date_start=date_start, date_finish=date_finish,
-    address=address, place=place, price=price, url=url, description=description)
-    db.session.add(new_event)
-    try:
-        db.session.commit()
-    except IntegrityError:
-        db.session.rollback()
-
+        event = Event(name=name, genre=genre, date_start=date_start, date_finish=date_finish, address=address, place=place, price=price, url=url, description=description)
+        events.append(event)
+        db.session.bulk_save_objects(events)
+        # без коммита, потому что в models.py session_options={'autocommit': True}
 
 #img_url = tile['Image630x315']['Url']
 

@@ -8,4 +8,4 @@ blueprint = Blueprint('event', __name__)
 def index():
     title = 'Куда сходить и чем заняться в Москве'
     # Вывести события 
-    return render_template('start.html', page_title=title)
+    return render_template('event/index.html', page_title=title)
