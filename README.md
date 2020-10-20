@@ -6,7 +6,7 @@ You can customize the system to work the way you want, and maybe even allow othe
 
 ## Installation
 
-Clone this repository https://github.com/imaevam/BuildAWeatherApp.git
+Clone this repository https://github.com/imaevam/events_alert_app.git
 
 Create a virtual environment and activate it.
 
