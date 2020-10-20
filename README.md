@@ -12,8 +12,7 @@ Create a virtual environment and activate it.
 
 Then in a virtual environment do:
 
-```pip install -r requirements.txt
-```
+```pip install -r requirements.txt```
 
 You can start the app from the terminal by using this script: 
 Linux and Mac: ```export FLASK_APP=webapp && export FLASK_ENV=development && flask run ```
