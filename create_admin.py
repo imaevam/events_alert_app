@@ -16,7 +16,7 @@ with app.app_context():
 
     password1 = getpass('Введите пароль: ')
     password2 = getpass('Повторите пароль: ')
-    if not password1 == password2:
+    if password1 != password2:
         print('Пароли не совпадают')
         sys.exit(0)
 
@@ -25,4 +25,4 @@ with app.app_context():
 
     db.session.add(new_user)
     db.session.commit()
-    print('User with id={} added'.format(new_user.id))
+    print(f'User with id={new_user.id} added')

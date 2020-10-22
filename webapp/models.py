@@ -17,3 +17,4 @@ class Resource(db.Model):
 
     def __repr__(self):
         return '<Resource: {}>'.format(self.name_resourse)
+
