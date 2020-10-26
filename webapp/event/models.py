@@ -38,8 +38,8 @@ class Comment(db.Model):
         db.ForeignKey('user.id', ondelete='CASCADE'),  # ondelete='CASCADE' - если удаляется новость- удаляются все к ней комментарии автоматически
         index=True
     )
-    event = relationship('Event', backref='comments')
-    user = relationship('User', backref='comments')
+    event = db.relationship('Event', backref='comments')
+    user = db.relationship('User', backref='comments')
 
     def __repr__(self):
         return '<Comment {}>'.format(self.id)
