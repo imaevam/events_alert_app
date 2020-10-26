@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask
 from flask_login import LoginManager
 
 from webapp.models import db
@@ -20,10 +20,9 @@ def create_app():
     app.register_blueprint(admin_blueprint)
     app.register_blueprint(event_blueprint)
     app.register_blueprint(user_blueprint)
-    
+
     @login_manager.user_loader  # запрос к бд, проверка по user_id
     def load_user(user_id):
         return User.query.get(user_id)
-
 
     return app

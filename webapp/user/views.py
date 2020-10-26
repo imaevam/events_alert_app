@@ -63,5 +63,4 @@ def process_reg():
                     getattr(form, field).label.text,   # взять атрибут, не зная самого поля
                     error
                 ))
-        return redirect (url_for('user.register'))
-  
+        return redirect(url_for('user.register'))

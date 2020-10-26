@@ -1,11 +1,6 @@
 import datetime
-import json
-import os
-import pprint
 import requests
-from webapp.models import db
 from webapp.event.models import Event
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from webapp.config import SQLALCHEMY_DATABASE_URI
@@ -21,14 +16,16 @@ def get_payload(url):
     return requests.get(url=url, headers={'Accept': 'application/json'}).json()
 
 
-def convert_date(date): 
+def convert_date(date):
     date_format = '%Y-%m-%dT%H:%M:%S'
     date_update = datetime.datetime.strptime(date, date_format)
     return date_update
 
+
 def direct_path(path):
     url = f'https://afisha.ru{path}'
     return url
+
 
 def correct_text(data_descr):
     updated_text = data_descr.replace('<p>', '')
@@ -46,7 +43,7 @@ def get_description(path, category):
             data_descr = main_func['ExhibitionInfo']['Description']
         elif main_func['ExhibitionInfo']['Description'] == '':
             data_descr = main_func['ExhibitionInfo']['DistributorInfo']['Text']
-        else: 
+        else:
             data_descr = None
     elif category == 'theatre':
         data_descr = main_func['PerformanceInfo']['Description']
@@ -54,24 +51,24 @@ def get_description(path, category):
         if main_func['ConcertInfo']['DistributorInfo'] is None:
             data_descr = main_func['ConcertInfo']['Description']
         elif main_func['ConcertInfo']['Description'] == '' or main_func['ConcertInfo']['Description'] is None:
-            data_descr = main_func['ConcertInfo']['DistributorInfo']['Text']  
+            data_descr = main_func['ConcertInfo']['DistributorInfo']['Text']
         else:
             data_descr = None
     if data_descr is not None:
         data_descr = correct_text(data_descr)
     return data_descr
-    
+
 
 def collect_details(category_lst, category):
     tiles = [tile for item in category_lst for tile in item['Tiles']]
     events = []
     for tile in tiles:
-        name = tile['Name']
+        title = tile['Name']
         genre = tile['Badge']
         date_min, date_max = tile['ScheduleInfo']['MaxScheduleDate'], tile['ScheduleInfo']['MinScheduleDate'] 
         if isinstance(date_min, str) and isinstance(date_max, str):
             date_start, date_finish = convert_date(date_min), convert_date(date_max)
-        else: 
+        else:
             date_start, date_finish = None, None
         address = tile['Notice']['PlaceUrl']['Address'] 
         place = tile['Notice']['PlaceUrl']['Name'] 
@@ -84,11 +81,8 @@ def collect_details(category_lst, category):
             img_url = None
         else:
             img_url = tile['Image945x540']['Url']
-        event = Event(name=name, genre=genre, date_start=date_start, date_finish=date_finish, address=address, place=place, price=price, url=url, description=description, img_url=img_url)
+        event = Event(title=title, genre=genre, date_start=date_start, date_finish=date_finish, address=address, place=place, price=price, url=url, description=description, img_url=img_url)
         events.append(event)
         s.bulk_save_objects(events)
         s.commit()
         s.close()
-
-
-    

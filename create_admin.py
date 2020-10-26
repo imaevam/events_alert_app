@@ -1,4 +1,4 @@
-from getpass import getpass  # защищенный input 
+from getpass import getpass  # защищенный input
 import sys  # для правильного завершения скрипта при возникновении ошибки
 
 from webapp import create_app

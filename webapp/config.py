@@ -1,5 +1,5 @@
 from datetime import timedelta
-import os 
+import os
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
