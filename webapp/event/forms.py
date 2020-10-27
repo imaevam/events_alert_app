@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import HiddenField, StringField, SubmitField
 from wtforms.validators import DataRequired, ValidationError
-from webapp.news.models import News
+from webapp.event.models import Event
 
 
 class CommentForm(FlaskForm):

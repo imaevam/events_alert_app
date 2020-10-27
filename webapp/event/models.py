@@ -1,5 +1,5 @@
 from webapp.models import db
-from datetime impirt datetime
+import datetime
 from sqlalchemy.orm import relationship
 
 
@@ -24,10 +24,10 @@ class Event(db.Model):
         return '<Events {} {}>'.format(self.title, self.url)
 
 
-class Comment(db.Model):
+class Comment(db.Model):    # создала форму CommentForm в моделях и описала ее
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.Text, nullable=False)
-    created = db.Column(db.DateTime, nullable=False, default=datetime.now())
+    created = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now)
     event_id = db.Column(
         db.Integer,
         db.ForeignKey('event.id', ondelete='CASCADE'),
@@ -35,12 +35,14 @@ class Comment(db.Model):
     )
     user_id = db.Column(
         db.Integer,
-        db.ForeignKey('user.id', ondelete='CASCADE'),  # ondelete='CASCADE' - если удаляется новость- удаляются все к ней комментарии автоматически
+        db.ForeignKey('user.id', ondelete='CASCADE'),  # удаляется event и все к ней комментарии автоматически
         index=True
     )
     event = relationship('Event', backref='comments')
     user = relationship('User', backref='comments')
 
+    def comments_count(self):
+        return Comment.query.filter(Comment.news_id == self.id).count()
+
     def __repr__(self):
         return '<Comment {}>'.format(self.id)
-

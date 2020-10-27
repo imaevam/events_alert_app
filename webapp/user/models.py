@@ -28,3 +28,11 @@ class User(db.Model, UserMixin):  # Множественное наследов�
 
     def __repr__(self):
         return 'User name={} id={}'.format(self.username, self.id)
+
+
+class UserEvents(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    event_id = db.Column(db.Integer, db.ForeignKey('event.id'))
+    user = db.relationship('User', back_populates='events')
+    event = db.relationship('Event', back_populates='users')
