@@ -38,8 +38,8 @@ class Comment(db.Model):    # создала форму CommentForm в моде�
         db.ForeignKey('user.id', ondelete='CASCADE'),  # удаляется event и все к ней комментарии автоматически
         index=True
     )
-    event = relationship('Event', backref='comments')
-    user = relationship('User', backref='comments')
+    event = db.relationship('Event', backref='comments')
+    user = db.relationship('User', backref='comments')
 
     def comments_count(self):
         return Comment.query.filter(Comment.news_id == self.id).count()
