@@ -4,6 +4,7 @@ from webapp.event.models import Event
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from webapp.config import SQLALCHEMY_DATABASE_URI
+from webapp.models import Category, Resource
 
 
 engine = create_engine(SQLALCHEMY_DATABASE_URI)
@@ -59,22 +60,26 @@ def get_description(path, category):
     return data_descr
 
 
-def collect_details(category_lst, category):
+def collect_details(category_lst, category, resource):
     tiles = [tile for item in category_lst for tile in item['Tiles']]
     events = []
     for tile in tiles:
         title = tile['Name']
         genre = tile['Badge']
-        date_min, date_max = tile['ScheduleInfo']['MaxScheduleDate'],
-                        tile['ScheduleInfo']['MinScheduleDate']
+        date_min = tile['ScheduleInfo']['MaxScheduleDate']
+        date_max = tile['ScheduleInfo']['MinScheduleDate']
         if isinstance(date_min, str) and isinstance(date_max, str):
-            date_start, date_finish = convert_date(date_min), convert_date(date_max)
+            date_start = convert_date(date_min)
+            date_finish = convert_date(date_max)
         else:
             date_start, date_finish = None, None
-        address = tile['Notice']['PlaceUrl']['Address'] 
-        place = tile['Notice']['PlaceUrl']['Name'] 
-        price = tile['ScheduleInfo']['MinPrice']
+        address = tile['Notice']['PlaceUrl']['Address']
+        place = tile['Notice']['PlaceUrl']['Name']
         path = tile['Url']
+        if tile['ScheduleInfo']['MinPrice'] is None:
+            price = "Уточните информацию заранее"
+        else:
+            price = tile['ScheduleInfo']['MinPrice']
         url = direct_path(path)
         description = get_description(path, category)
         img_url = tile['Image945x540']
@@ -82,16 +87,18 @@ def collect_details(category_lst, category):
             img_url = None
         else:
             img_url = tile['Image945x540']['Url']
-        event = Event(title=title, genre=genre, date_start=date_start, date_finish=date_finish,
-                    address=address, place=place, price=price, url=url,
-                    description=description, img_url=img_url)
+        event = Event(title=title, genre=genre, date_start=date_start,
+                      date_finish=date_finish, address=address, place=place,
+                      price=price, url=url, description=description,
+                      img_url=img_url, category_id=category,
+                      resource_id=resource)
         events.append(event)
         s.bulk_save_objects(events)
         s.commit()
         s.close()
 
 
-def get_or_create(name):
+def get_or_create_category(name):
     try:
         category = s.query(Category).get(name=name)
     except:
@@ -99,3 +106,13 @@ def get_or_create(name):
         s.add(category)
         s.commit()
     return category
+
+
+def get_or_create_resource(name):
+    try:
+        resource = s.query(Resource).get(name=name)
+    except:
+        resource = Resource(name=name)
+        s.add(resource)
+        s.commit()
+    return resource

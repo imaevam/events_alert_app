@@ -13,7 +13,7 @@ class Event(db.Model):
     description = db.Column(db.Text, nullable=True)
     place = db.Column(db.String(50), nullable=True)
     address = db.Column(db.String(100), nullable=True)
-    price = db.Column(db.DECIMAL(10, 2), nullable=True)
+    price = db.Column(db.String, nullable=True)
     img_url = db.Column(db.String(200), nullable=True)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
     category = db.relationship('Category', backref='events')

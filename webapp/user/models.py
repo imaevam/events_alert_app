@@ -20,7 +20,7 @@ class User(Model, UserMixin):  # Множественное наследован
     gender = Column(db.Enum('male', 'female', name='gender'))
     birthday = Column(db.Date, nullable=False)
     role = Column(db.String(10), index=True)
-    subscribed_events = relationship("Subscription", back_populates="user", lazy="dynamic")
+    subscribed_events = relationship("UserEvents", back_populates="user", lazy="dynamic")
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
