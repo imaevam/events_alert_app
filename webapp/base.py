@@ -65,8 +65,7 @@ def collect_details(category_lst, category):
     for tile in tiles:
         title = tile['Name']
         genre = tile['Badge']
-        date_min, date_max = tile['ScheduleInfo']['MaxScheduleDate'],
-                        tile['ScheduleInfo']['MinScheduleDate']
+        date_min, date_max = tile['ScheduleInfo']['MaxScheduleDate'], tile['ScheduleInfo']['MinScheduleDate']
         if isinstance(date_min, str) and isinstance(date_max, str):
             date_start, date_finish = convert_date(date_min), convert_date(date_max)
         else:
