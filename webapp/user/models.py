@@ -1,5 +1,4 @@
-from flask_login import UserMixin
-from flask_login import current_user
+from flask_login import UserMixin, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from webapp.models import db
@@ -30,13 +29,13 @@ class User(Model, UserMixin):  # Множественное наследован
     def check_password(self, password):
         return check_password_hash(self.password, password)  # true \ false
 
-    def subscribe(self, api_id):
-        sub = Subscription(user_id=current_user.id)
+    def is_subscribe(self):
+        sub = UserEvents(user_id=current_user.id)
         db.session.add(sub)
         db.session.commit()
 
-    def unsubscribe(self, api_id):
-        sub = Subscription.query.filter_by(user_id=current_user.id).first()
+    def unsubscribe(self):
+        sub = UserEvents.query.filter_by(user_id=current_user.id).first()
         db.session.delete(sub)
         db.session.commit()
 
@@ -56,10 +55,10 @@ class UserEvents(Model):
     event = relationship('Event', backref='users')
 
 
-class Subscription(Model):
+"""class Subscription(Model):
     id = Column(db.Integer, primary_key=True)
     user_id = Column(db.Integer, ForeignKey("user.id"))
     subscription_id = Column(db.Integer, primary_key=True)
 
     def __repr__(self):
-        return 'User {} is subscribed to {}'.format(self.user_id, self.subscription_id)
+        return 'User {} is subscribed to {}'.format(self.user_id, self.subscription_id)"""
