@@ -7,6 +7,7 @@ from webapp.config import SQLALCHEMY_DATABASE_URI
 from webapp.models import Category, Resource
 
 
+
 engine = create_engine(SQLALCHEMY_DATABASE_URI)
 Session = sessionmaker(bind=engine)
 s = Session()
