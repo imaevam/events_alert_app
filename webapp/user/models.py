@@ -1,5 +1,4 @@
-from flask_login import UserMixin
-from flask_login import current_user
+from flask_login import UserMixin, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from webapp.models import db
@@ -29,7 +28,7 @@ class User(Model, UserMixin):  # Множественное наследован
     def check_password(self, password):
         return check_password_hash(self.password, password)  # true \ false
 
-    def subscribe(self, api_id):
+    def is_subscribe(self):
         sub = UserEvents(user_id=current_user.id)
         db.session.add(sub)
         db.session.commit()

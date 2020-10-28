@@ -89,3 +89,13 @@ def collect_details(category_lst, category):
         s.bulk_save_objects(events)
         s.commit()
         s.close()
+
+
+def get_or_create(name):
+    try:
+        category = s.query(Category).get(name=name)
+    except:
+        category = Category(name=name)
+        s.add(category)
+        s.commit()
+    return category
