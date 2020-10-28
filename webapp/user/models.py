@@ -26,17 +26,16 @@ class User(Model, UserMixin):  # Множественное наследован
     def set_password(self, password):
         self.password = generate_password_hash(password)
 
-
     def check_password(self, password):
         return check_password_hash(self.password, password)  # true \ false
 
     def subscribe(self, api_id):
-        sub = Subscription(user_id=current_user.id)
+        sub = UserEvents(user_id=current_user.id)
         db.session.add(sub)
         db.session.commit()
 
     def unsubscribe(self, api_id):
-        sub = Subscription.query.filter_by(user_id=current_user.id).first()
+        sub = UserEvents.query.filter_by(user_id=current_user.id).first()
         db.session.delete(sub)
         db.session.commit()
 
@@ -48,18 +47,9 @@ class User(Model, UserMixin):  # Множественное наследован
         return 'User name={} id={}'.format(self.username, self.id)
 
 
-class UserEvents(Model):
+class UserEvents(Model):  # Subscription
     id = Column(db.Integer, primary_key=True)
     user_id = Column(db.Integer, ForeignKey('user.id'))
     event_id = Column(db.Integer, ForeignKey('event.id'))
     user = relationship('User', backref='events')
     event = relationship('Event', backref='users')
-
-
-class Subscription(Model):
-    id = Column(db.Integer, primary_key=True)
-    user_id = Column(db.Integer, ForeignKey("user.id"))
-    subscription_id = Column(db.Integer, primary_key=True)
-
-    def __repr__(self):
-        return 'User {} is subscribed to {}'.format(self.user_id, self.subscription_id)

@@ -7,12 +7,11 @@ from webapp.models import db
 
 blueprint = Blueprint('event', __name__)
 
-
 @blueprint.route('/')
 def index():
     title = 'Куда сходить и чем заняться в Москве'
-    # Вывести события 
-    return render_template('event/index.html', page_title=title)
+    events = Event.query.all() # .order_by(Event.date_start)
+    return render_template('base.html', page_title=title, events=events)
 
 
 @blueprint.route('/news/comment', methods=['POST'])

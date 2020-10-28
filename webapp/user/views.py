@@ -6,7 +6,7 @@ from webapp.user.models import User
 from flask_login import current_user, login_user, logout_user
 
 
-blueprint = Blueprint('user', __name__, url_prefix='/users')  # метод разделения Flask-приложения на модули
+blueprint = Blueprint('user', __name__, url_prefix='/users')
 
 @blueprint.route('/login')
 def login():
