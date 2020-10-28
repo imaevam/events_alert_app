@@ -4,6 +4,7 @@ from webapp.event.models import Event
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from webapp.config import SQLALCHEMY_DATABASE_URI
+from webapp.models import Category
 
 
 engine = create_engine(SQLALCHEMY_DATABASE_URI)
