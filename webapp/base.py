@@ -65,7 +65,8 @@ def collect_details(category_lst, category):
     for tile in tiles:
         title = tile['Name']
         genre = tile['Badge']
-        date_min, date_max = tile['ScheduleInfo']['MaxScheduleDate'], tile['ScheduleInfo']['MinScheduleDate'] 
+        date_min, date_max = tile['ScheduleInfo']['MaxScheduleDate'],
+                        tile['ScheduleInfo']['MinScheduleDate']
         if isinstance(date_min, str) and isinstance(date_max, str):
             date_start, date_finish = convert_date(date_min), convert_date(date_max)
         else:
@@ -81,7 +82,9 @@ def collect_details(category_lst, category):
             img_url = None
         else:
             img_url = tile['Image945x540']['Url']
-        event = Event(title=title, genre=genre, date_start=date_start, date_finish=date_finish, address=address, place=place, price=price, url=url, description=description, img_url=img_url)
+        event = Event(title=title, genre=genre, date_start=date_start, date_finish=date_finish,
+                    address=address, place=place, price=price, url=url,
+                    description=description, img_url=img_url)
         events.append(event)
         s.bulk_save_objects(events)
         s.commit()
