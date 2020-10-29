@@ -1,78 +1,52 @@
-<!doctype html>
-<html lang="ru">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% extends "base.html" %}
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+{% block content %}
 
-    <title> {{ title }} </title>
-  </head>
-  <body>
-    <div class='conteiner'>
-    <h1> &nbsp; &nbsp; &nbsp; Твои события в городе</h1>
-    <div class='row'>
-        <div class='col-9'>
-          <form>
-            <div style="float:left; margin: 40px; padding: 10px;">
-              <label><input type="radio" name="colorRadio" value="f1"> Кино</label><br>
-              <label><input type="radio" name="colorRadio" value="f2"> Театр</label><br>
-              <label><input type="radio" name="colorRadio" value="f3"> Выставки</label><br>
-              <label><input type="radio" name="colorRadio" value="f4"> Мой микс</label><br>
-            </div>
-          <!-- http://jsfiddle.net/NobleMushtak/vTT7J/ -->
-
-          </form>
-            <!-- <h2>
-            {% if events %}
-                {{ events }}
-            {% else %}
-                Сервис временно недоступен
-            {% endif %}
-            </h2>  -->
-        </div>
-        <div class='col-3'>
-            Погода, реклама 
-        </div>
-        <div style="float:left; margin: 30px; padding: 20px;" class="f1 box"> {{ events }} </div>
-        <div style="float:left; margin: 30px; padding: 20px;" class="f2 box"> Грядущие спектакли</div>
-        <div style="float:left; margin: 30px; padding: 20px;" class="f3 box"> Актуальные экспозиции</div>
-        <div style="float:left; margin: 30px; padding: 20px;" class="f4 box"> Мои избранные события</div>
-    </dev>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Твои события</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+    <a class="nav-item nav-link active" href="#"> Кино </a>
+    <a class="nav-item nav-link" href="#">Театр</a>
+    <a class="nav-item nav-link" href="#">Концерты</a>
+    <a class="nav-item nav-link" href="#">Выставки</a>
     </div>
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-    <script>
-    $(function() {
-      $("input[type=\"radio\"]").click(function(){
-        var thisElem = $(this);
-        var value = thisElem.val();
-            $(".box").hide();
-        $("."+value).show();
-        //localStorage:
-        localStorage.setItem("option", value);
-        //Cookies:
-        //document.cookie="option="+value;
-        });
-      //localStorage:
-      var itemValue = localStorage.getItem("option");
-      if (itemValue !== null) {
-        $("input[value=\""+itemValue+"\"]").click();
-      }
-        /*
-      //Cookies:
-      var n = document.cookie;
-      if (n.indexOf("option=") !== -1) {
-        var cookieValue = n.substring(n.indexOf("option=")+7, n.indexOf(";"))
-        $("input[value=\""+cookieValue+"\"]").click();
-      }
-        */
-    });
-  </script>
-  </body>
-</html>
+  </div>
+</nav>
+<div class="container">
+  <div style="float:left; margin: 30px; padding: 20px;" class="f1 box">
+    {% for event in events %}
+    <div>
+      <div class='row'>
+        <div class='col-7'>
+          <h4><a href='{{ event.url }}'>{{ event.title }}</a></h4>
+          <p>{{ event.description }}</p>
+        </div>
+        <div class='col-5' style="float: right;">
+          <p><img src={{ event.img_url }} width="60%" height="60%" alt="Pic"/></p>
+          <p>Цена: {{ event.price }}</p>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-4'>
+          <p>Начинается: {{ event.date_start }}</p>
+        </div>
+        <div class='col-4'>
+        </div>
+        <div class='col-4'>
+          <p>Подписаться</p>
+        </div>
+      </div>
+    </div>
+    <hr />            
+    {% endfor %}
+  </div>
+  <div style="float:left; margin: 30px; padding: 20px;" class="f2 box"> Грядущие спектакли</div>
+  <div style="float:left; margin: 30px; padding: 20px;" class="f3 box"> Актуальные экспозиции</div>
+  <div style="float:left; margin: 30px; padding: 20px;" class="f4 box"> Мои избранные события</div>
+</div>
+
+{% endblock %}
