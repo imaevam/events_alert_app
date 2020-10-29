@@ -1,7 +1,7 @@
 from flask import Blueprint, flash, render_template  # current_app выведем события
 from flask_login import current_user, login_required
 from webapp.event.forms import CommentForm
-from webapp.event.models import Comment  # Event
+from webapp.event.models import Comment, Event
 from webapp.models import db
 
 
@@ -10,8 +10,8 @@ blueprint = Blueprint('event', __name__)
 @blueprint.route('/')
 def index():
     title = 'Куда сходить и чем заняться в Москве'
-    events = Event.query.all() # .order_by(Event.date_start)
-    return render_template('base.html', page_title=title, events=events)
+    events = Event.query.order_by(Event.date_start).all()
+    return render_template('menu.html', page_title=title, events=events)
 
 
 @blueprint.route('/news/comment', methods=['POST'])
