@@ -23,7 +23,7 @@ def create_app():
     app.register_blueprint(event_blueprint)
     app.register_blueprint(user_blueprint)
 
-    @login_manager.user_loader  # запрос к бд, проверка по user_id
+    @login_manager.user_loader 
     def load_user(user_id):
         return User.query.get(user_id)
 

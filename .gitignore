@@ -3,6 +3,7 @@ init_db.py
 webapp.db.old
 webapp.db
 # Byte-compiled / optimized / DLL files
+.vscode/
 __pycache__/
 *.py[cod]
 *$py.class
@@ -97,6 +98,7 @@ ipython_config.py
 
 # PEP 582; used by e.g. github.com/David-OConnor/pyflow
 __pypackages__/
+env/
 
 # Celery stuff
 celerybeat-schedule
@@ -108,7 +110,6 @@ celerybeat.pid
 # Environments
 .env
 .venv
-env/
 venv/
 ENV/
 env.bak/
@@ -131,3 +132,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+config.py
+*.db

@@ -15,3 +15,4 @@ with app.app_context():
         result = collect_details(data, category_name, resource)
         get_or_create_category(category_name)
         get_or_create_resource(resource)
+
