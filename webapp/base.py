@@ -117,3 +117,5 @@ def get_or_create_resource(name):
         s.add(resource)
         s.commit()
     return resource
+
+#test
