@@ -7,7 +7,7 @@ class Event(db.Model):
     id = db.Column(db.Integer, unique=True, primary_key=True)
     title = db.Column(db.String(50), nullable=False)
     genre = db.Column(db.String(100), nullable=True)
-    url = db.Column(db.String(100), nullable=False)
+    url = db.Column(db.String(100), unique=True, nullable=False)
     date_start = db.Column(db.Date, nullable=True)
     date_finish = db.Column(db.Date, nullable=True)
     description = db.Column(db.Text, nullable=True)
