@@ -2,10 +2,10 @@ import datetime
 import requests
 from webapp.event.models import Event
 from sqlalchemy import create_engine
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
 from webapp.config import SQLALCHEMY_DATABASE_URI
 from webapp.models import Category, Resource
-
 
 
 engine = create_engine(SQLALCHEMY_DATABASE_URI)
@@ -63,7 +63,7 @@ def get_description(path, category):
 
 def collect_details(category_lst, category, resource):
     tiles = [tile for item in category_lst for tile in item['Tiles']]
-    events = []
+    all_events = []
     for tile in tiles:
         title = tile['Name']
         genre = tile['Badge']
@@ -93,10 +93,13 @@ def collect_details(category_lst, category, resource):
                       price=price, url=url, description=description,
                       img_url=img_url, category_id=category,
                       resource_id=resource)
-        events.append(event)
-        s.bulk_save_objects(events)
+        all_events.append(event)
+    try:
+        s.bulk_save_objects(all_events)
         s.commit()
         s.close()
+    except IntegrityError:
+        s.rollback()
 
 
 def get_or_create_category(name):
