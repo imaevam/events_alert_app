@@ -7,14 +7,39 @@
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-    <div class="navbar-nav">
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="navbar-nav"></div>
     <a class="nav-item nav-link active" href="#"> Кино </a>
     <a class="nav-item nav-link" href="#">Театр</a>
     <a class="nav-item nav-link" href="#">Концерты</a>
     <a class="nav-item nav-link" href="#">Выставки</a>
     </div>
-  </div>
+  <form class="form-inline my-2 my-lg-0">
+    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Искать</button>
+  </form>
+  <ul class="navbar-nav">
+      {% if current_user.is_authenticated %}
+        <li class="nav-item">
+          <span class="nav-link">Привет, {{ current_user.username }}!</span>
+        </li>
+        {% if current_user.is_admin %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('admin.admin_index') }}">Админка</a>
+        </li>
+        {% endif %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('user.logout') }}">Выйти</a>
+        </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('user.register') }}">Зарегистрироваться</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('user.login') }}">Войти</a>
+          </li>
+        {% endif %}
+  </ul>
 </nav>
 <div class="container">
   <div style="float:left; margin: 30px; padding: 20px;" class="f1 box">

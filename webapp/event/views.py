@@ -14,7 +14,7 @@ def index():
     return render_template('menu.html', page_title=title, events=events)
 
 
-@blueprint.route('/news/comment', methods=['POST'])
+@blueprint.route('/event/comment', methods=['POST'])
 @login_required
 def add_comment():
     form = CommentForm()
