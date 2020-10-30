@@ -2,16 +2,23 @@ from flask import Blueprint, flash, render_template  # current_app выведе�
 from flask_login import current_user, login_required
 from webapp.event.forms import CommentForm
 from webapp.event.models import Comment, Event
+from webapp.models import Category
 from webapp.models import db
 
 
 blueprint = Blueprint('event', __name__)
 
+
 @blueprint.route('/')
 def index():
     title = 'Куда сходить и чем заняться в Москве'
     events = Event.query.order_by(Event.date_start).all()
-    return render_template('menu.html', page_title=title, events=events)
+    return render_template('event/index.html', page_title=title, events=events)     
+
+@blueprint.route('/<int:category_id>')
+def event_by_category(category_id):
+    category_events = Event.query.filter().all()
+    return render_template('event/index.html', page_title=title, events=category_events)     
 
 
 @blueprint.route('/news/comment', methods=['POST'])
