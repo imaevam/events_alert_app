@@ -2,13 +2,36 @@
 
 {% block content %}
 
-    <div class='row'>
-      <div class='col-8'>
-        {{ category }}
+			<div style="float:left; margin: 30px; padding: 20px;" class="f1 box">
+				{% for event in events %}
+				<div>
+					<div class='row'>
+						<div class='col-7'>
+							<h4><a href='{{ event.url }}'>{{ event.title }}</a></h4>
+							<p>{{ event.description }}</p>
+						</div>
+						<div class='col-5' style="float: right;">
+							<p><img src={{ event.img_url }} width="60%" height="60%" alt="Pic"/></p>
+							<p>Цены: {{ event.price }} </p>
+						</div>
+					</div>
+					<div class='row'>
+						<div class='col-4'>
+							<p>Начинается: {{ event.date_start }}</p>
+						</div>
+						<div class='col-4'>
+						</div>
+						<div class='col-4'>
+							<p>Подписаться</p>
+						</div>
+					</div>
+				</div>
+				<hr />            
+				{% endfor %}
+			</div>
+			<div style="float:left; margin: 30px; padding: 20px;" class="f2 box"> Грядущие спектакли</div>
+			<div style="float:left; margin: 30px; padding: 20px;" class="f3 box"> Актуальные экспозиции</div>
+			<div style="float:left; margin: 30px; padding: 20px;" class="f4 box"> Мои избранные события</div>
+		
 
-      </div>
-      <div class='col-4'>
-        <h2>Other events</h2>
-      </div>
-    </div>
 {% endblock %}
