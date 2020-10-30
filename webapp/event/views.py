@@ -15,10 +15,10 @@ def index():
     events = Event.query.order_by(Event.date_start).all()
     return render_template('event/index.html', page_title=title, events=events)     
 
-@blueprint.route('/<int:category_id>')
+@blueprint.route('/category/<category_id>')
 def event_by_category(category_id):
-    category_events = Event.query.filter().all()
-    return render_template('event/index.html', page_title=title, events=category_events)     
+    category_events = Event.query.filter(Event.category_id == category_id).all()
+    return render_template('event/category.html', events=category_events)     
 
 
 @blueprint.route('/news/comment', methods=['POST'])

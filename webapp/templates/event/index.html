@@ -2,7 +2,6 @@
 
 {% block content %}
 
-		
 			<div style="float:left; margin: 30px; padding: 20px;" class="f1 box">
 				{% for event in events %}
 				<div>
@@ -13,7 +12,7 @@
 						</div>
 						<div class='col-5' style="float: right;">
 							<p><img src={{ event.img_url }} width="60%" height="60%" alt="Pic"/></p>
-							<p>Цены стартуют от {{ event.price }} руб.</p>
+							<p>Цены: {{ event.price }} </p>
 						</div>
 					</div>
 					<div class='row'>
