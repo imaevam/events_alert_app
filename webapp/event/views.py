@@ -18,7 +18,7 @@ def index():
 @blueprint.route('/category/<category_id>')
 def event_by_category(category_id):
     category_events = Event.query.filter(Event.category_id == category_id).order_by(Event.date_start).all()
-    return render_template('event/category.html', events=category_events)     
+    return render_template('event/index.html', events=category_events)     
 
 
 @blueprint.route('/event/comment', methods=['POST'])
