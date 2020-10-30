@@ -15,10 +15,10 @@ class User(Model, UserMixin):  # Множественное наследован
     password = Column(db.String(50), nullable=False)
     email = Column(db.String(120), unique=True, nullable=False)
     first_name = Column(db.String(50), nullable=False)
-    last_name = Column(db.String(50), nullable=False)
+    last_name = Column(db.String(50), nullable=True)
     profile_picture = Column(db.String(255), nullable=True)
     gender = Column(db.Enum('male', 'female', name='gender'))
-    birthday = Column(db.Date, nullable=False)
+    birthday = Column(db.Date, nullable=True)
     role = Column(db.String(10), index=True)
     subscribed_events = relationship("UserEvents", back_populates="user", lazy="dynamic")
 

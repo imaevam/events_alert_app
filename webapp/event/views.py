@@ -21,7 +21,7 @@ def event_by_category(category_id):
     return render_template('event/index.html', events=category_events)     
 
 
-@blueprint.route('/news/comment', methods=['POST'])
+@blueprint.route('/event/comment', methods=['POST'])
 @login_required
 def add_comment():
     form = CommentForm()
