@@ -73,7 +73,7 @@ def collect_details(category_lst, category, resource):
             date_start = convert_date(date_min)
             date_finish = convert_date(date_max)
         else:
-            date_start, date_finish = None, None
+            date_start, date_finish = "Дата уточняется", "Дата уточняется"
         address = tile['Notice']['PlaceUrl']['Address']
         place = tile['Notice']['PlaceUrl']['Name']
         path = tile['Url']
