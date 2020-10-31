@@ -22,7 +22,10 @@
 						<div class='col-4'>
 						</div>
 						<div class='col-4'>
-							<button type="button" href="#" class="btn btn-primary btn-sm">Подписаться</button>
+							<a class="btn btn-primary" href="{{ url_for('event.subscribe_event', event_id=event.id) }}">Подписаться</a>
+						
+							<a class="btn btn-primary" href="{{ url_for('event.unsubscribe_event', event_id=event.id) }}">Отписаться</a>
+							
 						</div>
 					</div>
 				</div>

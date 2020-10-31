@@ -34,7 +34,7 @@ def add_comment():
         flash('Комментарий успешно добавлен')
 
 
-@blueprint.route('/subscribe/<int:event_id>')
+@blueprint.route('/subscribe/<int:event_id>/')
 def subscribe_event(event_id):
     is_user_subscribed = UserEvents.query.filter_by(user_id=current_user.id, event_id=event_id).first()
     if is_user_subscribed:
@@ -44,11 +44,12 @@ def subscribe_event(event_id):
         return redirect(url_for('event.index'))
 
 
-@blueprint.route('/unsubscribe')
+@blueprint.route('/unsubscribe/<int:event_id>/')
 def unsubscribe_event(event_id):
-    is_user_unsubscribed = UserEvents.query.filter_by(user_id=current_user.id, event_id=event_id).first()
-    if is_user_unsubscribed:
-        return redirect(url_for('event.index'))
-    else:
+    is_user_subscribed = UserEvents.query.filter_by(user_id=current_user.id, event_id=event_id).first()
+    if is_user_subscribed:
         current_user.unsubscribe(event_id=event_id)
         return redirect(url_for('event.index'))
+    else:
+        return redirect(url_for('event.index'))
+        
