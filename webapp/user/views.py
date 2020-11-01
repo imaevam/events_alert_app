@@ -11,7 +11,7 @@ blueprint = Blueprint('user', __name__, url_prefix='/users')
 @blueprint.route('/login')
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('events.index'))
+        return redirect(url_for('event.index'))
     title = 'Авторизация'
     login_form = LoginForm()
     return render_template('user/login.html', page_title=title, form=login_form)
@@ -50,7 +50,8 @@ def register():
 def process_reg():
     form = RegistrationForm()
     if form.validate_on_submit():
-        new_user = User(username=form.username.data, email=form.email.data, role='user')
+        new_user = User(username=form.username.data, email=form.email.data, first_name=form.first_name.data,
+        last_name=form.last_name.data, gender=form.gender.data, birthday=form.birthday.data, role='user')
         new_user.set_password(form.password.data)
         db.session.add(new_user)
         db.session.commit()
@@ -60,7 +61,8 @@ def process_reg():
         for field, errors in form.errors.items():  # field - название поля(username, email), errors - список строк с ошибками
             for error in errors:
                 flash('Ошибка в поле {}: {}'.format(
-                    getattr(form, field).label.text,   # взять атрибут, не зная самого поля
+                    getattr(form, field).label.text,
                     error
                 ))
         return redirect(url_for('user.register'))
+

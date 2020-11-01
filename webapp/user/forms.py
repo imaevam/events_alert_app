@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from webapp.user.models import User
 from wtforms import BooleanField, StringField, PasswordField, \
-                    SubmitField, RadioField, DateTimeField
+                    SubmitField, RadioField, DateField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 
 
@@ -21,9 +21,9 @@ class RegistrationForm(FlaskForm):
     email = StringField('Электронная почта', validators=[DataRequired(), Email()], render_kw={"class": "form-control"})
     password = PasswordField('Пароль', validators=[DataRequired()], render_kw={"class": "form-control"})
     password2 = PasswordField('Повторите пароль', validators=[DataRequired(), EqualTo('password')], render_kw={"class": "form-control"})
-    profile_picture = FileField('Фотография', validators=[DataRequired(), FileAllowed(['jpg', 'png'])])
-    birthday = DateTimeField('Дата рождения', format='%d.%m.%Y')
-    gender = RadioField('Пол', choices=[('М', 'Male'), ('Ж', 'Female')])
+    profile_picture = FileField('Фотография', validators=[FileAllowed(['jpg', 'png'])])
+    birthday = DateField('Дата рождения', format='%d.%m.%Y')
+    gender = RadioField('Пол', choices=[('male', 'Male'), ('female', 'Female')])
     submit = SubmitField('Отправить', render_kw={"class": "btn btn-primary"})
 
     def validate_username(self, username):
