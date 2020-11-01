@@ -16,7 +16,7 @@ def index():
     events = Event.query.order_by(Event.date_start).all()
     return render_template('event/index.html', page_title=title, events=events)     
 
-
+  
 @blueprint.route('/category/<category_id>')
 def event_by_category(category_id):
     category_events = Event.query.filter(Event.category_id == category_id).order_by(Event.date_start).all()
