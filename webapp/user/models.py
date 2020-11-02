@@ -28,13 +28,13 @@ class User(Model, UserMixin):  # Множественное наследован
     def check_password(self, password):
         return check_password_hash(self.password, password)  # true \ false
 
-    def is_subscribe(self):
-        sub = UserEvents(user_id=current_user.id)
+    def subscribe(self, event_id):
+        sub = UserEvents(user_id=self.id, event_id=event_id)
         db.session.add(sub)
         db.session.commit()
 
-    def unsubscribe(self, api_id):
-        sub = UserEvents.query.filter_by(user_id=current_user.id).first()
+    def unsubscribe(self, event_id):
+        sub = UserEvents.query.filter_by(user_id=self.id, event_id=event_id).first()
         db.session.delete(sub)
         db.session.commit()
 
