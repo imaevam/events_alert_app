@@ -1,6 +1,6 @@
 from webapp import create_app
-from webapp.base import (get_payload, collect_details,
-                         get_or_create_category, get_or_create_resource)
+from webapp.base import get_payload, collect_details
+from init_db import get_or_create_category, get_or_create_resource
 
 
 app = create_app()

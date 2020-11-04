@@ -14,11 +14,15 @@ class Event(db.Model):
     place = db.Column(db.String(50), nullable=True)
     address = db.Column(db.String(100), nullable=True)
     price = db.Column(db.String, nullable=True)
-    img_url = db.Column(db.String(200), nullable=True)
+    img_url = db.Column(db.String(100), nullable=True)
+    text = db.Column(db.Text, nullable=True)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
     category = db.relationship('Category', backref='events')
     resource_id = db.Column(db.Integer, db.ForeignKey('resource.id'))
     resource = db.relationship('Resource', backref='events')
+    
+    def comments_count(self):
+        return Comment.query.filter(Comment.event_id == self.id).count()
 
     def __repr__(self):
         return '<Events {} {}>'.format(self.title, self.url)
@@ -40,9 +44,6 @@ class Comment(db.Model):    # создала форму CommentForm в моде�
     )
     event = db.relationship('Event', backref='comments')
     user = db.relationship('User', backref='comments')
-
-    def comments_count(self):
-        return Comment.query.filter(Comment.news_id == self.id).count()
 
     def __repr__(self):
         return '<Comment {}>'.format(self.id)
