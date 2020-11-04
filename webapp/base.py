@@ -1,11 +1,13 @@
+from bs4 import BeautifulSoup
 import datetime
 import requests
-from webapp.event.models import Event
 from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
+from webapp.event.models import Event
 from webapp.config import SQLALCHEMY_DATABASE_URI
 from webapp.models import Category, Resource
+from webapp.utils import get_html
 
 
 engine = create_engine(SQLALCHEMY_DATABASE_URI)
@@ -78,20 +80,21 @@ def collect_details(category_lst, category, resource):
         place = tile['Notice']['PlaceUrl']['Name']
         path = tile['Url']
         if tile['ScheduleInfo']['MinPrice'] is None:
-            price = "Уточните информацию заранее"
+            price = None
         else:
             price = tile['ScheduleInfo']['MinPrice']
         url = direct_path(path)
         description = get_description(path, category)
-        img_url = tile['Image945x540']
-        if img_url is None:
+        img_path = tile['Image945x540']
+        if img_path is None:
             img_url = None
         else:
             img_url = tile['Image945x540']['Url']
+        text = get_events_content(url)
         event = Event(title=title, genre=genre, date_start=date_start,
                       date_finish=date_finish, address=address, place=place,
                       price=price, url=url, description=description,
-                      img_url=img_url, category_id=category,
+                      img_url=img_url, text=text, category_id=category,
                       resource_id=resource)
         all_events.append(event)
     try:
@@ -102,21 +105,12 @@ def collect_details(category_lst, category, resource):
         s.rollback()
 
 
-def get_or_create_category(name):
+def get_events_content(url):
     try:
-        category = s.query(Category).get(name=name)
+        html = get_html(url)
+        if html:
+            soup = BeautifulSoup(html, 'html.parser')
+            event_text = soup.find('div', class_='block-without-padding').decode_contents()
+            return event_text
     except:
-        category = Category(name=name)
-        s.add(category)
-        s.commit()
-    return category
-
-
-def get_or_create_resource(name):
-    try:
-        resource = s.query(Resource).get(name=name)
-    except:
-        resource = Resource(name=name)
-        s.add(resource)
-        s.commit()
-    return resource
+        return None

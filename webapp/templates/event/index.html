@@ -7,17 +7,21 @@
 				<div>
 					<div class='row'>
 						<div class='col-7'>
-							<h4><a href='{{ event.url }}'>{{ event.title }}</a></h4>
+							<h4><a href="{{ url_for('event.single_event', event_id=event.id)}}">{{ event.title }}</a></h4>
 							<p>{{ event.description }}</p>
 						</div>
 						<div class='col-5' style="float: right;">
 							<p><img src={{ event.img_url }} width="60%" height="60%" alt="Pic"/></p>
-							<p>Цены: {{ event.price }} </p>
+							{% if event.price != None %}
+								<p>Цены: {{event.price}} руб.</p>
+							{% else %}
+								<p> Цена уточняется </p>
+							{% endif %}
 						</div>
 					</div>
 					<div class='row'>
 						<div class='col-4'>
-							<p>Начинается: {{ event.date_start }}</p>
+							<p>Начинается: {{ event.date_start }} | Комментарии: {{ event.comments_count() }}</p>
 						</div>
 						<div class='col-4'>
 						</div>
