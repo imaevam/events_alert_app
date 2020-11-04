@@ -36,3 +36,16 @@ class RegistrationForm(FlaskForm):
         user_count = User.query.filter_by(email=email.data).count()
         if user_count > 0:
             raise ValidationError("Пользователь с такой электронной почтой уже зарегистрирован")
+
+
+class ResetPasswordRequestForm(FlaskForm):
+    email = StringField("Email", validators=[DataRequired(),
+                        Email("Неправильно введен Email")])
+    submit = SubmitField("Сбросить пароль")
+
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField("Пароль", validators=[DataRequired()])
+    confirm = PasswordField("Повторите пароль", validators=[DataRequired(),
+                            EqualTo("password", "Пароли должны быть одинаковы")])
+    submit = SubmitField("Сбросить пароль")

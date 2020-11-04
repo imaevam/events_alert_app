@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, redirect, render_template, url_for  # current_app выведем события
+from flask import abort, Blueprint, flash, redirect, render_template, url_for  # current_app выведем события
 from flask_login import current_user, login_required
 from webapp.event.forms import CommentForm
 from webapp.event.models import Comment, Event
@@ -26,13 +26,18 @@ def event_by_category(category_id):
 @blueprint.route('/event/comment', methods=['POST'])
 @login_required
 def add_comment():
-    form = CommentForm()
-    if form.validate_on_submit():
-        comment = Comment(text=form.comment_text, event_id=form.event_id, user_id=current_user.id)  # ??
-        db.session.add(comment)
-        db.session.commit()
-        flash('Комментарий успешно добавлен')
+    pass
 
+
+@blueprint.route('/event/<int:event_id>')  # проверка по id
+def single_event(event_id):
+    my_event = Event.query.filter(Event.id == event_id).first()
+    form = CommentForm()
+    if not my_event:
+        abort(404)
+
+    return render_template('event/single_event.html', event=my_event, comment_form=form)
+        
 
 @blueprint.route('/subscribe/<int:event_id>/')
 def subscribe_event(event_id):
