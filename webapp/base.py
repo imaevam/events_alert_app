@@ -1,4 +1,3 @@
-from bs4 import BeautifulSoup
 import datetime
 import requests
 from sqlalchemy import create_engine
@@ -7,7 +6,6 @@ from sqlalchemy.orm import sessionmaker
 from webapp.event.models import Event
 from webapp.config import SQLALCHEMY_DATABASE_URI
 from webapp.models import Category, Resource
-from webapp.utils import get_html
 
 
 engine = create_engine(SQLALCHEMY_DATABASE_URI)
@@ -37,6 +35,32 @@ def correct_text(data_descr):
     return text
 
 
+def get_description(path, category):
+    url = path[1:]
+    main_func = get_payload(url)
+    if category == 'movie':
+        data_descr = main_func['MovieCard']['Info']['Description']
+    elif category == 'exhibition':
+        if main_func['ExhibitionInfo']['DistributorInfo'] is None:
+            data_descr = main_func['ExhibitionInfo']['Description']
+        elif main_func['ExhibitionInfo']['Description'] == '':
+            data_descr = main_func['ExhibitionInfo']['DistributorInfo']['Text']
+        else:
+            data_descr = None
+    elif category == 'theatre':
+        data_descr = main_func['PerformanceInfo']['Description']
+    elif category == 'concert':
+        if main_func['ConcertInfo']['DistributorInfo'] is None:
+            data_descr = main_func['ConcertInfo']['Description']
+        elif main_func['ConcertInfo']['Description'] == '' or main_func['ConcertInfo']['Description'] is None:
+            data_descr = main_func['ConcertInfo']['DistributorInfo']['Text']
+        else:
+            data_descr = None
+    if data_descr is not None:
+        data_descr = correct_text(data_descr)
+    return data_descr
+
+
 def collect_details(category_lst, category, resource):
     tiles = [tile for item in category_lst for tile in item['Tiles']]
     all_events = []
@@ -58,13 +82,13 @@ def collect_details(category_lst, category, resource):
         else:
             price = tile['ScheduleInfo']['MinPrice']
         url = direct_path(path)
-        description = tile['Verdict']
+        description = tile['Verdict']  # краткая информация для main page
         img_path = tile['Image945x540']
         if img_path is None:
             img_url = None
         else:
             img_url = tile['Image945x540']['Url']
-        text = get_events_content(url)
+        text = get_description(path, category)  # для каждого события для карточки
         event = Event(title=title, genre=genre, date_start=date_start,
                       date_finish=date_finish, address=address, place=place,
                       price=price, url=url, description=description,
@@ -77,14 +101,3 @@ def collect_details(category_lst, category, resource):
         s.close()
     except IntegrityError:
         s.rollback()
-
-
-def get_events_content(url):
-    try:
-        html = get_html(url)
-        if html:
-            soup = BeautifulSoup(html, 'html.parser')
-            event_text = soup.find('div', class_='block-without-padding').decode_contents()
-            return event_text
-    except:
-        return None
