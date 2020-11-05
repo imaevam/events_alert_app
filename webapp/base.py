@@ -37,32 +37,6 @@ def correct_text(data_descr):
     return text
 
 
-def get_description(path, category):
-    url = path[1:]
-    main_func = get_payload(url)
-    if category == 'movie':
-        data_descr = main_func['MovieCard']['Info']['Description']
-    elif category == 'exhibition':
-        if main_func['ExhibitionInfo']['DistributorInfo'] is None:
-            data_descr = main_func['ExhibitionInfo']['Description']
-        elif main_func['ExhibitionInfo']['Description'] == '':
-            data_descr = main_func['ExhibitionInfo']['DistributorInfo']['Text']
-        else:
-            data_descr = None
-    elif category == 'theatre':
-        data_descr = main_func['PerformanceInfo']['Description']
-    elif category == 'concert':
-        if main_func['ConcertInfo']['DistributorInfo'] is None:
-            data_descr = main_func['ConcertInfo']['Description']
-        elif main_func['ConcertInfo']['Description'] == '' or main_func['ConcertInfo']['Description'] is None:
-            data_descr = main_func['ConcertInfo']['DistributorInfo']['Text']
-        else:
-            data_descr = None
-    if data_descr is not None:
-        data_descr = correct_text(data_descr)
-    return data_descr
-
-
 def collect_details(category_lst, category, resource):
     tiles = [tile for item in category_lst for tile in item['Tiles']]
     all_events = []
@@ -84,7 +58,7 @@ def collect_details(category_lst, category, resource):
         else:
             price = tile['ScheduleInfo']['MinPrice']
         url = direct_path(path)
-        description = get_description(path, category)
+        description = tile['Verdict']
         img_path = tile['Image945x540']
         if img_path is None:
             img_url = None
