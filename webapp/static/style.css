@@ -2,13 +2,6 @@
     max-width: 100%;
 }
 
-.event-content {
-    line-height: 22px;
-    white-space: pre-wrap;
-    margin-left: 20px;
-    margin-top: 10px;
-}
-
 body {
     background-color: #fff;
     font-family: Graphik,Helvetica,Arial,sans-serif;
@@ -24,3 +17,9 @@ h4 {
     color: #333333;
     text-transform: uppercase;
 }
+
+.event-card {
+    font-size: 30px;
+    line-height: 70px;
+    font-weight: 700;
+}  

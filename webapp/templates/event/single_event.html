@@ -1,11 +1,24 @@
 {% extends "base.html" %}
 
 {% block content %}
-        <div class="row">
-            <div class="col-10 event-content">
-                {{ event.text|safe }}
-                <p><img src={{ event.img_url }} width="70%" height="70%" alt="Pic"/></p>
-                {% if event.comments %}
+            <div class="event-content">
+            </div>
+                <h1 class="event-card">{{ event.title }}</h1>
+                <h6>Жанр: {{ event.genre }}<br /></h6>
+                <div class="row">
+                    <div class='col-6'>
+                        <p>{{ event.text }}</p>
+                        {% if event.place != None %}
+                            <h6>Местро проведения: {{ event.place }}<br />
+                        {% endif %}
+                        {% if event.address != None %}
+                            <h6>По адресу: {{ event.address }}</h6>
+                        {% endif %}
+                    </div>
+                    <div class='col-6'>
+                        <img class="card-img-top" src="{{ event.img_url  }}" class="img-fluid" alt="Responsive image">
+                    </div>
+                    {% if event.comments %}
                     <h3>Комментарии:</h3>
                     {% for comment in event.comments %}
                     <div class="card">
@@ -17,10 +30,8 @@
                             </p>
                         </div>
                     </div>
-                {% endfor %}
+                    {% endfor %}
                 {% endif %}
             </div>
-        <div class="col-2">
-        </div>
-    </div>
+            </div>
 {% endblock %}

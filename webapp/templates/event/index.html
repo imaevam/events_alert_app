@@ -18,7 +18,7 @@
                 <p class="card-text">{{ event.description }}</p>
                 <p class="card-text"><small class="text-muted">
                     {% if event.price != None %}
-                        <p>Цены: {{event.price}} руб.</p>
+                        <p>Цены: от {{event.price}} руб.</p>
                     {% else %}
                         <p> Цена уточняется </p>
                     {% endif %}
@@ -27,9 +27,10 @@
                     {% else %}
                         <p>Дата корректируется | Комментарии: {{ event.comments_count() }}</p>
                     {% endif %}</small></p>
-                    <div class='col-6'>
-                        <a class="btn btn-primary" href="{{ url_for('event.subscribe_event', event_id=event.id) }}">Подписаться</a><a class="btn btn-primary" href="{{ url_for('event.unsubscribe_event', event_id=event.id) }}">Отписаться</a>
-                    </div>
+                    
+                <a button type="button" class="btn btn-info" href="{{ url_for('event.subscribe_event', event_id=event.id) }}">Подписаться</a>
+                <a button type="button" class="btn btn-info" href="{{ url_for('event.unsubscribe_event', event_id=event.id) }}">Отписаться</a>
+    
                </div>
            </div>
          </div>
