@@ -12,3 +12,4 @@ class CommentForm(FlaskForm):
     def validates_news_id(self, news_id):
         if not News.query.get(news_id.data):
             raise ValidationError('Вы пытаетесь прокомментировать событие с несуществующим id')
+        

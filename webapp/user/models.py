@@ -48,7 +48,10 @@ class User(Model, UserMixin):  # Множественное наследован
 
 class UserEvents(Model):  # Subscription
     id = Column(db.Integer, primary_key=True)
-    user_id = Column(db.Integer, ForeignKey('user.id'))
-    event_id = Column(db.Integer, ForeignKey('event.id'))
+    user_id = Column(db.Integer, ForeignKey('user.id', ondelete='CASCADE'), index=True)
+    event_id = Column(db.Integer, ForeignKey('event.id', ondelete='CASCADE'), index=True)
     user = relationship('User', backref='events')
     event = relationship('Event', backref='users')
+
+    def __repr__(self):
+        return 'Subscribe={}'.format(self.id)

@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from webapp.user.models import User
 from wtforms import BooleanField, StringField, PasswordField, \
-                    SubmitField, RadioField, DateField
+                    SubmitField, RadioField, DateField, HiddenField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 
 
@@ -47,5 +47,5 @@ class ResetPasswordRequestForm(FlaskForm):
 class ResetPasswordForm(FlaskForm):
     password = PasswordField("Пароль", validators=[DataRequired()])
     confirm = PasswordField("Повторите пароль", validators=[DataRequired(),
-                            EqualTo("password", "Пароли должны быть одинаковы")])
+                            EqualTo("password", 'Пароли должны быть одинаковы')])
     submit = SubmitField("Сбросить пароль")
