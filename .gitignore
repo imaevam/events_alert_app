@@ -1,6 +1,5 @@
 .vscode
 webapp.db.old
-webapp.db
 # Byte-compiled / optimized / DLL files
 .vscode/
 __pycache__/
