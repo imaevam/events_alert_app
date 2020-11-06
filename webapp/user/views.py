@@ -2,7 +2,8 @@ from flask import Blueprint, flash, render_template, redirect, url_for
 
 from webapp.models import db
 from webapp.user.forms import LoginForm, RegistrationForm
-from webapp.user.models import User
+from webapp.user.models import User, UserEvents
+from webapp.event.models import Event
 from flask_login import current_user, login_user, logout_user
 
 
@@ -66,3 +67,13 @@ def process_reg():
                 ))
         return redirect(url_for('user.register'))
 
+@blueprint.route('/subscribed')
+def subscription():
+    try:
+        user_sub_events_id = [x.id for x in  UserEvents.query.filter(UserEvents.user_id == current_user.id).all()]
+        events = Event.query.filter(Event.id.in_(user_sub_events_id)).all()
+        return render_template('event/index.html', events=events) 
+    except:
+        title = 'Куда сходить и чем заняться в Москве'
+        events = Event.query.order_by(Event.date_start).all()
+        return render_template('event/index.html', page_title=title, events=events)
