@@ -70,7 +70,7 @@ def process_reg():
 @blueprint.route('/subscribed')
 def subscription():
     try:
-        user_sub_events_id = [x.id for x in  UserEvents.query.filter(UserEvents.user_id == current_user.id).all()]
+        user_sub_events_id = [x.event_id for x in  UserEvents.query.filter(UserEvents.user_id == current_user.id).all()]
         events = Event.query.filter(Event.id.in_(user_sub_events_id)).all()
         return render_template('event/index.html', events=events) 
     except:
