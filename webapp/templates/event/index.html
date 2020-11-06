@@ -5,7 +5,6 @@
 {% block content %}
 
 <div class="container-fluid">
-&nbsp;
  <div class="row">
      {% for event in events %}
          <div class="col-xl-3 col-xs-9">
@@ -13,20 +12,20 @@
              <div class="card event-card">
               <img class="card-img-top" src="{{ event.img_url  }}" alt="Card image cap" height="200" width="100">
                <div class="card-block">
-				<h4 class="card-title"><a href="{{ url_for('event.single_event', event_id=event.id)}}">{{ event.title }}</a></h4>
+				<h5 class="card-title"><a href="{{ url_for('event.single_event', event_id=event.id)}}">{{ event.title }}</a></h5>
                 <h6>Жанр: {{ event.genre }}</h6>
-                <p class="card-text">{{ event.description }}</p>
-                <p class="card-text"><small class="text-muted">
+                <h6 class="card-text">{{ event.description }}</h6>
+                <h6 class="card-text"><small class="text-muted">
                     {% if event.price != None %}
-                        <p>Цены: от {{event.price}} руб.</p>
+                        <h6>Цены: от {{event.price}} руб.</h6>
                     {% else %}
-                        <p> Цена уточняется </p>
+                        <h6> Цена уточняется </h6>
                     {% endif %}
                     {% if event.date_start != None %}
-                        <p>Начинается: {{ event.date_start }} | Комментарии: {{ event.comments_count() }}</p>
+                        <h6>Начинается: {{ event.date_start }} | Комментарии: {{ event.comments_count() }}</h6>
                     {% else %}
-                        <p>Дата корректируется | Комментарии: {{ event.comments_count() }}</p>
-                    {% endif %}</small></p>
+                        <h6>Дата корректируется | Комментарии: {{ event.comments_count() }}</h6>
+                    {% endif %}</small></h6>
                     
                 <a button type="button" class="btn btn-info" href="{{ url_for('event.subscribe_event', event_id=event.id) }}">Подписаться</a>
                 <a button type="button" class="btn btn-info" href="{{ url_for('event.unsubscribe_event', event_id=event.id) }}">Отписаться</a>
