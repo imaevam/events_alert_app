@@ -1,7 +1,4 @@
-from datetime import datetime
-from flask import current_app
-from flask_login import UserMixin, current_user
-from sqlalchemy.ext.declarative import declared_attr
+from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from webapp.models import db
@@ -11,18 +8,8 @@ Column = db.Column
 ForeignKey = db.ForeignKey
 relationship = db.relationship
 
-class ServiceMixin:
-    @declared_attr
-    def created_at(cls):
-        return Column(db.DateTime, default=datetime.utcnow)
-
-    @declared_attr
-    def last_modified(cls):
-        return Column(db.DateTime, default=datetime.utcnow, 
-                        onupdate=datetime.utcnow)
-
     
-class User(Model, UserMixin, ServiceMixin):  # Множественное наследование
+class User(Model, UserMixin):  # Множественное наследование
     id = Column(db.Integer, primary_key=True)
     username = Column(db.String(50), index=True, unique=True, nullable=False)
     password = Column(db.String(50), nullable=False)
@@ -32,7 +19,6 @@ class User(Model, UserMixin, ServiceMixin):  # Множественное нас
     profile_picture = Column(db.String(255), nullable=True)
     gender = Column(db.Enum('male', 'female', name='gender'))
     birthday = Column(db.Date, nullable=True)
-    is_active = Column(db.Boolean, nullable=False, default=True)
     role = Column(db.String(10), index=True)
     subscribed_events = relationship("UserEvents", back_populates="user", lazy="dynamic")
 
