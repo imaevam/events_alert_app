@@ -8,7 +8,7 @@ You can customize the system to work the way you want, and maybe even allow othe
 
 Clone this repository https://github.com/imaevam/events_alert_app.git
 
-Create a virtual environment and activate it.
+Create a virtual environment (use virtualenv) and activate it.
 
 Then in a virtual environment do:
 
@@ -18,3 +18,5 @@ You can start the app from the terminal by using this script:
 Linux and Mac: ```export FLASK_APP=webapp && export FLASK_ENV=development && flask run ```
 
 Windows: ```set FLASK_APP=webapp && set FLASK_ENV=development && set FLASK_DEBUG=1 && flask run```
+
+Go to http://127.0.0.1:5000

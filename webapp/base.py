@@ -1,4 +1,3 @@
-from bs4 import BeautifulSoup
 import datetime
 import requests
 from sqlalchemy import create_engine
@@ -7,7 +6,6 @@ from sqlalchemy.orm import sessionmaker
 from webapp.event.models import Event
 from webapp.config import SQLALCHEMY_DATABASE_URI
 from webapp.models import Category, Resource
-from webapp.utils import get_html
 
 
 engine = create_engine(SQLALCHEMY_DATABASE_URI)
@@ -84,13 +82,13 @@ def collect_details(category_lst, category, resource):
         else:
             price = tile['ScheduleInfo']['MinPrice']
         url = direct_path(path)
-        description = get_description(path, category)
+        description = tile['Verdict']  # краткая информация для main page
         img_path = tile['Image945x540']
         if img_path is None:
             img_url = None
         else:
             img_url = tile['Image945x540']['Url']
-        text = get_events_content(url)
+        text = get_description(path, category)  # для каждого события для карточки
         event = Event(title=title, genre=genre, date_start=date_start,
                       date_finish=date_finish, address=address, place=place,
                       price=price, url=url, description=description,
@@ -103,14 +101,3 @@ def collect_details(category_lst, category, resource):
         s.close()
     except IntegrityError:
         s.rollback()
-
-
-def get_events_content(url):
-    try:
-        html = get_html(url)
-        if html:
-            soup = BeautifulSoup(html, 'html.parser')
-            event_text = soup.find('div', class_='block-without-padding').decode_contents()
-            return event_text
-    except:
-        return None

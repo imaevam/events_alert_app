@@ -10,7 +10,7 @@ class Event(db.Model):
     url = db.Column(db.String(100), unique=True, nullable=False)
     date_start = db.Column(db.Date, nullable=True)
     date_finish = db.Column(db.Date, nullable=True)
-    description = db.Column(db.Text, nullable=True)
+    description = db.Column(db.String(150), nullable=True)
     place = db.Column(db.String(50), nullable=True)
     address = db.Column(db.String(100), nullable=True)
     price = db.Column(db.String, nullable=True)

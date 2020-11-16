@@ -1,4 +1,4 @@
-from flask_login import UserMixin, current_user
+from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from webapp.models import db
@@ -8,7 +8,7 @@ Column = db.Column
 ForeignKey = db.ForeignKey
 relationship = db.relationship
 
-
+    
 class User(Model, UserMixin):  # Множественное наследование
     id = Column(db.Integer, primary_key=True)
     username = Column(db.String(50), index=True, unique=True, nullable=False)
