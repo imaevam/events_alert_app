@@ -10,7 +10,7 @@ class CommentForm(FlaskForm):
     comment_text = StringField('Текст комментария', validators=[DataRequired()], render_kw={"class": "form-control"})
     submit = SubmitField('Отправить', render_kw={"class": "btn btn-primary"})
 
-    def validates_news_id(self, event_id):
+    def validates_event_id(self, event_id):
         if not Event.query.get(event_id.data):
             raise ValidationError('Вы пытаетесь прокомментировать событие с несуществующим id')
 
