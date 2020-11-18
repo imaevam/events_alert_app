@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_login import LoginManager
 from flask_migrate import Migrate
+from elasticsearch import Elasticsearch
 
 from webapp.models import db
 from webapp.admin.views import blueprint as admin_blueprint
@@ -12,6 +13,8 @@ from webapp.user.views import blueprint as user_blueprint
 def create_app():
     app = Flask(__name__)
     app.config.from_pyfile('config.py')
+    app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']]) \
+        if app.config['ELASTICSEARCH_URL'] else None
     db.init_app(app)
     migrate = Migrate(app, db)
 

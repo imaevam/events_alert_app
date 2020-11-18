@@ -41,11 +41,11 @@ class RegistrationForm(FlaskForm):
 class ResetPasswordRequestForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired(),
                         Email("Неправильно введен Email")])
-    submit = SubmitField("Сбросить пароль")
+    submit = SubmitField("Сбросить пароль", render_kw={"class": "btn btn-primary"})
 
 
 class ResetPasswordForm(FlaskForm):
     password = PasswordField("Пароль", validators=[DataRequired()])
     confirm = PasswordField("Повторите пароль", validators=[DataRequired(),
                             EqualTo("password", 'Пароли должны быть одинаковы')])
-    submit = SubmitField("Сбросить пароль")
+    submit = SubmitField("Сбросить пароль", render_kw={"class": "btn btn-primary"})

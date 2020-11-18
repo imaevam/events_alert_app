@@ -7,7 +7,6 @@ Model = db.Model
 Column = db.Column
 ForeignKey = db.ForeignKey
 relationship = db.relationship
-
     
 class User(Model, UserMixin):  # Множественное наследование
     id = Column(db.Integer, primary_key=True)

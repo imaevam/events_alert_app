@@ -1,9 +1,11 @@
 from webapp.models import db
 import datetime
 from sqlalchemy.orm import relationship
+from webapp.models import SearchableMixin
 
 
-class Event(db.Model):
+class Event(db.Model, SearchableMixin):
+    __searchable__ = ['body']
     id = db.Column(db.Integer, unique=True, primary_key=True)
     title = db.Column(db.String(50), nullable=False)
     genre = db.Column(db.String(100), nullable=True)

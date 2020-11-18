@@ -67,6 +67,7 @@ def process_reg():
                 ))
         return redirect(url_for('user.register'))
 
+
 @blueprint.route('/subscribed')
 def subscription():
     try:
