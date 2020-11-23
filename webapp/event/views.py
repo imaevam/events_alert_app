@@ -1,36 +1,27 @@
-from flask import abort, Blueprint, current_app, flash, g, redirect, request, render_template, url_for  # current_app выведем события
+from flask import (abort, Blueprint, current_app, flash, redirect,
+                   request, render_template, url_for)
 from flask_login import current_user, login_required
 
+from sqlalchemy import or_
 from webapp.event.forms import CommentForm, SearchForm
 from webapp.event.models import Comment, Event
 from webapp.user.models import UserEvents
 from webapp.models import Category
 from webapp.models import db
+from connect_db import get_data_from_db_by_search
 
 
 blueprint = Blueprint('event', __name__)
 
-@blueprint.route('/')
-def index():
+
+@blueprint.route('/', methods=['GET', 'POST'])
+def index():    
     title = 'Куда сходить и чем заняться в Москве'
     events = Event.query.order_by(Event.date_start).all()
-    return render_template('event/index.html', page_title=title, events=events)
-
-
-@blueprint.route('/search')
-@login_required
-def search():
-    if not g.search_form.validate():
-        return redirect(url_for('event.index'))
-    page = request.args.get('page', 1, type=int)
-    posts, total = Event.search(g.search_form.q.data, page,
-                               current_app.config['POSTS_PER_PAGE'])
-    next_url = url_for('event.search', q=g.search_form.q.data, page=page + 1) \
-        if total > page * current_app.config['POSTS_PER_PAGE'] else None
-    prev_url = url_for('event.search', q=g.search_form.q.data, page=page - 1) \
-        if page > 1 else None
-    return render_template('event/search.html', title=('Search'), posts=posts,
-                           next_url=next_url, prev_url=prev_url)
+    search = SearchForm(request.form)
+    if request.method == 'POST':
+        return search_results(search)
+    return render_template('event/index.html', page_title=title, events=events, form=search)
 
 
 @blueprint.route('/category/<category_id>')
@@ -73,3 +64,12 @@ def unsubscribe_event(event_id):
         return redirect(url_for('event.index'))
     else:
         return redirect(url_for('event.index'))
+
+
+@blueprint.route('/search')
+def search_results(search):
+    if search_form.validate_on_submit():
+        search_result_data = get_data_from_db_by_search(search_str)
+        return render_template('event/search_results.html', events=search_results, search_form=search_form,
+        location='search', search_str=search_str)
+    return redirect(url_for('event.index'))

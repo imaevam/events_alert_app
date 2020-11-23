@@ -1,11 +1,11 @@
 from webapp.models import db
 import datetime
 from sqlalchemy.orm import relationship
-from webapp.models import SearchableMixin
 
 
-class Event(db.Model, SearchableMixin):
-    __searchable__ = ['body']
+class Event(db.Model):
+    __searchable__ = ['title', 'description']
+    __table_args__ = {'extend_existing': True} 
     id = db.Column(db.Integer, unique=True, primary_key=True)
     title = db.Column(db.String(50), nullable=False)
     genre = db.Column(db.String(100), nullable=True)
@@ -30,7 +30,7 @@ class Event(db.Model, SearchableMixin):
         return '<Events {} {}>'.format(self.title, self.url)
 
 
-class Comment(db.Model):    # создала форму CommentForm в моделях и описала ее
+class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.Text, nullable=False)
     created = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now)
