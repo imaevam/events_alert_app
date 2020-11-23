@@ -68,8 +68,8 @@ def unsubscribe_event(event_id):
 
 @blueprint.route('/search')
 def search_results(search):
-    if search_form.validate_on_submit():
+    if search.validate_on_submit():
+        search_str = f"%{search.search.data}%"
         search_result_data = get_data_from_db_by_search(search_str)
-        return render_template('event/search_results.html', events=search_results, search_form=search_form,
-        location='search', search_str=search_str)
-    return redirect(url_for('event.index'))
+        #all_search_results = Event.query.filter_by(event_id=ids_str).first()
+    return render_template('event/search_results.html', events=search_result_data, search_str=search_str)

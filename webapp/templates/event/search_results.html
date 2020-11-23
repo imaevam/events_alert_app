@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
-    {% for event in search_results %}
+{% for event in events %}
         <article class="media content-section">
             <div class="media-body">
                 <div class="article-metadata">
-                  
+                  {{ event.title }}
+                  {{ event.text }}
                 </div>
             </div>
         </article>
