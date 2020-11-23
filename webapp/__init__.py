@@ -4,6 +4,7 @@ from flask_migrate import Migrate
 
 from webapp.models import db
 from webapp.admin.views import blueprint as admin_blueprint
+from webapp.event.forms import SearchForm
 from webapp.event.views import blueprint as event_blueprint
 from webapp.user.models import User
 from webapp.user.views import blueprint as user_blueprint
