@@ -21,13 +21,14 @@ def index():
     search = SearchForm(request.form)
     if request.method == 'POST':
         return search_results(search)
-    return render_template('event/index.html', page_title=title, events=events, form=search)
-
+    user_sub_events_id = [x.event_id for x in  UserEvents.query.filter(UserEvents.user_id == current_user.id).all()]
+    return render_template('event/index.html', page_title=title, events=events, user_events=user_sub_events_id, form=search)
 
 @blueprint.route('/category/<category_id>')
 def event_by_category(category_id):
     category_events = Event.query.filter(Event.category_id == category_id).order_by(Event.date_start).all()
-    return render_template('event/index.html', events=category_events) 
+    user_sub_events_id = [x.event_id for x in  UserEvents.query.filter(UserEvents.user_id == current_user.id).all()]
+    return render_template('event/index.html', events=category_events, user_events=user_sub_events_id) 
 
 
 @blueprint.route('/event/comment', methods=['POST'])
@@ -73,3 +74,4 @@ def search_results(search):
         search_result_data = get_data_from_db_by_search(search_str)
         #all_search_results = Event.query.filter_by(event_id=ids_str).first()
     return render_template('event/search_results.html', events=search_result_data, search_str=search_str)
+
