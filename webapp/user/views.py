@@ -1,7 +1,8 @@
 from flask import Blueprint, flash, render_template, redirect, url_for
 
 from webapp.models import db
-from webapp.user.forms import LoginForm, RegistrationForm
+from webapp.email import send_password_reset_email
+from webapp.user.forms import LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm
 from webapp.user.models import User, UserEvents
 from webapp.event.models import Event
 from flask_login import current_user, login_user, logout_user
@@ -78,3 +79,18 @@ def subscription():
         title = 'Куда сходить и чем заняться в Москве'
         events = Event.query.order_by(Event.date_start).all()
         return render_template('event/index.html', page_title=title, events=events)
+
+
+@blueprint.route('/reset_password_request', methods=['GET', 'POST'])
+def reset_password_request():
+    if current_user.is_authenticated:
+        return redirect(url_for('event.index'))
+    form = ResetPasswordRequestForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            send_password_reset_email(user)
+        flash('Следуйте инструкциям, которые были отправлены на Вашу почту')
+        return redirect(url_for('user.login'))
+    return render_template('reset_password_request.html',
+                           title='Восстановление пароля', form=form)

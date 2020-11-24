@@ -2,7 +2,7 @@ import sqlite3
 import pandas as pd
 
 
-DB_PATH = r"C:\projects\final\events_alert_app\events_alert_app\webapp.db"
+DB_PATH = r"C:\projects\final\events_alert_app\events_alert_app\webapp.db"  # webapp.config
 
 
 def execute_query(query: str, db_path: str) -> pd.DataFrame:
