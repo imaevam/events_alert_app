@@ -10,11 +10,10 @@ from webapp.event.views import blueprint as event_blueprint
 from webapp.user.models import User
 from webapp.user.views import blueprint as user_blueprint
 
-# Globally accessible library
-mail = Mail()
 
 def create_app():  # Initialize the core application
     app = Flask(__name__)
+    mail = Mail(app)
     app.config.from_pyfile('config.py')
     db.init_app(app)
     mail.init_app(app)
