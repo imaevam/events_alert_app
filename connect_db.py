@@ -13,7 +13,6 @@ _sql = "select id, text from event"
 _description_df = execute_query(_sql, DB_PATH)
 assert "text" in _description_df.columns
 
-
 def get_data_from_db_by_search(search_request: str) -> dict:
     _filter_df = lambda row: search_request.lower() in row["text"].lower()
     description_df = _description_df[_description_df.apply(_filter_df, axis=1)]  # subset подмножество df

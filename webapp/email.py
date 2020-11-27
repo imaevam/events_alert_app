@@ -1,11 +1,11 @@
-from flask import render_template
-from flask_mail import Message
+from flask import Flask
+from flask_mail import Mail, Message
 
-def send_email(subject, sender, recipients, text_body, html_body):
-    msg = Message(subject, sender=sender, recipients=recipients)
-    msg.body = text_body
-    msg.html = html_body
+app = Flask(__name__)
+mail = Mail(app)
+
+def sender(email, password):
+    msg = Message("Восстановление пароля", sender="imaevam@list.ru", recipients=[email])
+    msg.body = "Привет. Если ты это читаешь, значит система восстановления пароля работает исправно. Твой пароль %d" %(password)
     mail.send(msg)
-
-def send_password_reset_email(user):
-    pass
+    return "Message sent!"

@@ -1,12 +1,15 @@
-from flask import Blueprint, flash, render_template, redirect, url_for
+from flask import Blueprint, flash, request, render_template, redirect, url_for
+from flask_login import current_user, login_user, logout_user
+from flask_mail import Mail, Message
+import requests
+import sqlite3
 
+from ..email import sender
+from ..config import DB_PATH
 from webapp.models import db
-from webapp.email import send_password_reset_email
-from webapp.user.forms import LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm
+from webapp.user.forms import LoginForm, RegistrationForm, ResetPasswordForm
 from webapp.user.models import User, UserEvents
 from webapp.event.models import Event
-from flask_login import current_user, login_user, logout_user
-
 
 blueprint = Blueprint('user', __name__, url_prefix='/users')
 
@@ -48,6 +51,7 @@ def register():
     title = 'Регистрация'
     return render_template('user/registration.html', page_title=title, form=form)
 
+
 @blueprint.route('/process-reg', methods=['POST'])
 def process_reg():
     form = RegistrationForm()
@@ -81,16 +85,20 @@ def subscription():
         return render_template('event/index.html', page_title=title, events=events)
 
 
-@blueprint.route('/reset_password_request', methods=['GET', 'POST'])
-def reset_password_request():
-    if current_user.is_authenticated:
-        return redirect(url_for('event.index'))
-    form = ResetPasswordRequestForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user:
-            send_password_reset_email(user)
-        flash('Следуйте инструкциям, которые были отправлены на Вашу почту')
-        return redirect(url_for('user.login'))
-    return render_template('reset_password_request.html',
-                           title='Восстановление пароля', form=form)
+@blueprint.route('/forgot', methods=['POST', 'GET'])
+def forgot():
+    if request.method == "POST":
+        conn = sqlite3.connect(r"C:\projects\final\events_alert_app\events_alert_app\webapp.db")  # config.py
+        forgotten_email = requests.form["forgetpass"]
+        all_emails = conn.execute('SELECT email FROM user')
+        if forgotten_email in all_emails:
+            forgotten_password = conn.execute(
+                    "SELECT password FROM user WHERE email = %d" % (forgotten_email))
+            sender(forgotten_password, forgotten_email)
+            flash("Инструкция была отправлена на Ваш электронный адрес")
+            return redirect(url_for('event.index'))
+        else:
+            flash("Возможно, Вы ввели не верный электронный адрес")
+            return redirect(url_for('user.login'))
+    else:
+        return render_template('user/reset_password.html')

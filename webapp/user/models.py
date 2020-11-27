@@ -1,8 +1,5 @@
-from time import time
-import jwt
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from webapp.config import SECRET_KEY
 
 from webapp.models import db
 
@@ -23,20 +20,6 @@ class User(Model, UserMixin):  # Множественное наследован
     birthday = Column(db.Date, nullable=True)
     role = Column(db.String(10), index=True)
     subscribed_events = relationship("UserEvents", back_populates="user", lazy="dynamic")
-
-    def get_reset_password_token(self, expires_in=600):
-        return jwt.encode(
-        {'reset_password': self.id, 'exp': time() + expires_in},
-        app.config['SECRET_KEY'], algorithm='HS256').decode('utf-8')
-
-    @staticmethod
-    def verify_reset_password_token(token):
-        try:
-            id = jwt.decode(token, app.config['SECRET_KEY'],
-                            algorithms=['HS256'])['reset_password']
-        except:
-            return
-        return User.query.get(id)
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
