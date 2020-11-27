@@ -1,13 +1,13 @@
 from flask import Blueprint, flash, request, render_template, redirect, url_for
 from flask_login import current_user, login_user, logout_user
 from flask_mail import Mail, Message
-import requests
+# import request
 import sqlite3
 
 from ..email import sender
 from ..config import DB_PATH
 from webapp.models import db
-from webapp.user.forms import LoginForm, RegistrationForm, ResetPasswordForm
+from webapp.user.forms import LoginForm, RegistrationForm
 from webapp.user.models import User, UserEvents
 from webapp.event.models import Event
 
@@ -85,15 +85,16 @@ def subscription():
         return render_template('event/index.html', page_title=title, events=events)
 
 
-@blueprint.route('/forgot', methods=['POST', 'GET'])
+@blueprint.route('/reset_password', methods=['POST', 'GET'])
 def forgot():
     if request.method == "POST":
         conn = sqlite3.connect(r"C:\projects\final\events_alert_app\events_alert_app\webapp.db")  # config.py
-        forgotten_email = requests.form["forgetpass"]
-        all_emails = conn.execute('SELECT email FROM user')
-        if forgotten_email in all_emails:
+        forgotten_email = request.form["forgetpass"]
+        all_emails = conn.execute('SELECT email FROM user where email = ?', (forgotten_email, ))
+        if all_emails.fetchone()[0] != None:
+            needed_id = conn.execute('SELECT id FROM User where email = ?', (forgotten_email, ))
             forgotten_password = conn.execute(
-                    "SELECT password FROM user WHERE email = %d" % (forgotten_email))
+                    "SELECT password FROM user WHERE id = %d" % (needed_id.fetchone()[0]))
             sender(forgotten_password, forgotten_email)
             flash("Инструкция была отправлена на Ваш электронный адрес")
             return redirect(url_for('event.index'))

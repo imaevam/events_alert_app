@@ -3,7 +3,7 @@ from flask_wtf.file import FileField, FileAllowed
 from webapp.user.models import User
 from wtforms import BooleanField, StringField, PasswordField, \
                     SubmitField, RadioField, DateField, HiddenField
-from wtforms.validators import DataRequired, Email, EqualTo, Length, Regexp, ValidationError
+from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 
 
 class LoginForm(FlaskForm):
@@ -37,19 +37,3 @@ class RegistrationForm(FlaskForm):
         if user_count > 0:
             raise ValidationError("Пользователь с такой электронной почтой уже зарегистрирован")
 
-
-class ResetPasswordRequestForm(FlaskForm):
-    email = StringField("Email", validators=[DataRequired(),
-                        Email("Неправильно введен Email")])
-    submit = SubmitField("Сбросить пароль", render_kw={"class": "btn btn-primary"})
-
-
-class ResetPasswordForm(FlaskForm):  # update password form 
-    email = StringField("email",
-                        validators=[DataRequired()])
-    password = PasswordField("Пароль", validators=[DataRequired(), Length(min=5, max=30, 
-                                message="Длина пароля должна быть не менее 5 символов и не более 30 символов"),
-                                         Regexp("^(?=.*[A-Z]+)(?=.*[!@#$&*])(?=.*[0-9]+)(?=.*[a-z]+).{5,}$", message="Пароль должен содержать заглавные буквы, числа и знаки препинания.")])
-    confirm_password = PasswordField("Повторите пароль", validators=[DataRequired(),
-                            EqualTo("password", 'Пароли должны совпадать')])
-    submit = SubmitField("Обновить пароль", render_kw={"class": "btn btn-primary"})
