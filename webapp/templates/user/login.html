@@ -26,6 +26,7 @@
                         {{ form.remember_me.label(class_='form-check-label') }}
                     </div>
                     {{ form.submit }}
+                    <a href="{{ url_for('user.forgot') }}" method="POST" class="my-link">Забыли пароль? </a>
                 </form>
             </div>
             <div class="col-8"></div>

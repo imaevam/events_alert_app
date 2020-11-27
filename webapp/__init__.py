@@ -1,10 +1,10 @@
 from flask import Flask
 from flask_login import LoginManager
+from flask_mail import Mail
 from flask_migrate import Migrate
 
 from webapp.models import db
 from webapp.admin.views import blueprint as admin_blueprint
-from webapp.event.forms import SearchForm
 from webapp.event.views import blueprint as event_blueprint
 from webapp.user.models import User
 from webapp.user.views import blueprint as user_blueprint
@@ -14,6 +14,8 @@ def create_app():
     app = Flask(__name__)
     app.config.from_pyfile('config.py')
     db.init_app(app)
+    mail = Mail()
+    mail.init_app(app)
     migrate = Migrate(app, db)
 
     login_manager = LoginManager()
@@ -29,3 +31,4 @@ def create_app():
         return User.query.get(user_id)
 
     return app
+

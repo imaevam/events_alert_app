@@ -14,7 +14,7 @@ from connect_db import get_data_from_db_by_search
 blueprint = Blueprint('event', __name__)
 
 
-@blueprint.route('/', methods=['GET', 'POST'])
+@blueprint.route('/')
 def index():    
     title = 'Куда сходить и чем заняться в Москве'
     events = Event.query.order_by(Event.date_start).all()
@@ -23,6 +23,7 @@ def index():
         return search_results(search)
     user_sub_events_id = [x.event_id for x in  UserEvents.query.filter(UserEvents.user_id == current_user.id).all()]
     return render_template('event/index.html', page_title=title, events=events, user_events=user_sub_events_id, form=search)
+
 
 @blueprint.route('/category/<category_id>')
 def event_by_category(category_id):
@@ -67,11 +68,14 @@ def unsubscribe_event(event_id):
         return redirect(url_for('event.index'))
 
 
-@blueprint.route('/search')
-def search_results(search):
+@blueprint.route('/search', methods=['GET'])
+def search_results():
+    search = SearchForm()
+    search_str = f"%{search.search.data}%"
     if search.validate_on_submit():
-        search_str = f"%{search.search.data}%"
-        search_result_data = get_data_from_db_by_search(search_str)
-        #all_search_results = Event.query.filter_by(event_id=ids_str).first()
-    return render_template('event/search_results.html', events=search_result_data, search_str=search_str)
+        search_result_data = get_data_from_db_by_search(search_str)  # list
+        return render_template('event/search_results.html', event=search_result_data, search_str=search_str)
+    else:
+        flash(f'По результатам поиска {search_str} ничего не было найдено')
+        return redirect(url_for('event.index'))
 

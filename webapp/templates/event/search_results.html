@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
+
 {% for event in events %}
+<h2> По результату "{{ search_str }}"" найдено </h2>
         <article class="media content-section">
             <div class="media-body">
                 <div class="article-metadata">
-                  {{ event.title }}
-                  {{ event.text }}
+                    <h5 class="card-title"><a href="{{ url_for('event.search_results', event_id=event.id)}}">{{ event.text }}</a></h5>
                 </div>
             </div>
         </article>
