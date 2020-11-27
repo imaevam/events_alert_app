@@ -18,13 +18,18 @@ blueprint = Blueprint('event', __name__)
 def index():    
     title = 'Куда сходить и чем заняться в Москве'
     events = Event.query.order_by(Event.date_start).all()
-    return render_template('event/index.html', page_title=title, events=events)
+    search = SearchForm(request.form)
+    if request.method == 'POST':
+        return search_results(search)
+    user_sub_events_id = [x.event_id for x in  UserEvents.query.filter(UserEvents.user_id == current_user.id).all()]
+    return render_template('event/index.html', page_title=title, events=events, user_events=user_sub_events_id, form=search)
 
 
 @blueprint.route('/category/<category_id>')
 def event_by_category(category_id):
     category_events = Event.query.filter(Event.category_id == category_id).order_by(Event.date_start).all()
-    return render_template('event/index.html', events=category_events) 
+    user_sub_events_id = [x.event_id for x in  UserEvents.query.filter(UserEvents.user_id == current_user.id).all()]
+    return render_template('event/index.html', events=category_events, user_events=user_sub_events_id) 
 
 
 @blueprint.route('/event/comment', methods=['POST'])
@@ -73,3 +78,4 @@ def search_results():
     else:
         flash(f'По результатам поиска {search_str} ничего не было найдено')
         return redirect(url_for('event.index'))
+
