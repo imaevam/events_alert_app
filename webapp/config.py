@@ -12,6 +12,6 @@ REMEMBER_COOKIE_DURATION = timedelta(days=5)  # Длительность сох�
 MAIL_SERVER = 'smtp.mail.ru'
 MAIL_PORT = 587
 MAIL_USE_SSL = True
-MAIL_USERNAME = "imaevam@list.ru"
-MAIL_PASSWORD = 'ehehoz88'
+MAIL_USERNAME = "Ваш электронный адрес"
+MAIL_PASSWORD = 'Пароль от почты'
 DB_PATH = r"C:\projects\final\events_alert_app\events_alert_app\webapp.db" 
