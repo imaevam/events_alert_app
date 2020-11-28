@@ -76,10 +76,11 @@ def subscription():
     try:
         user_sub_events_id = [x.event_id for x in  UserEvents.query.filter(UserEvents.user_id == current_user.id).all()]
         events = Event.query.filter(Event.id.in_(user_sub_events_id)).all()
-        return render_template('event/index.html', events=events) 
+        return render_template('event/index.html', events=events, user_events=user_sub_events_id) 
     except:
         title = 'Куда сходить и чем заняться в Москве'
         events = Event.query.order_by(Event.date_start).all()
+        flash('Вы не подписаны не на одно событие. Подпишитесь!')
         return render_template('event/index.html', page_title=title, events=events)
 
 
