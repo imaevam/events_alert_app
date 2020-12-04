@@ -18,11 +18,8 @@ blueprint = Blueprint('event', __name__)
 def index():    
     title = 'Куда сходить и чем заняться в Москве'
     events = Event.query.order_by(Event.date_start).all()
-    search = SearchForm(request.form)
-    if request.method == 'POST':
-        return search_results(search)
-    user_sub_events_id = [x.event_id for x in  UserEvents.query.filter(UserEvents.user_id == current_user.id).all()]
-    return render_template('event/index.html', page_title=title, events=events, user_events=user_sub_events_id, form=search)
+    #user_sub_events_id = [x.event_id for x in  UserEvents.query.filter(UserEvents.user_id == current_user.id).all()]
+    return render_template('event/index.html', page_title=title, events=events)     
 
 
 @blueprint.route('/category/<category_id>')
@@ -34,8 +31,19 @@ def event_by_category(category_id):
 
 @blueprint.route('/event/comment', methods=['POST'])
 @login_required
-def add_comment():
-    pass
+def add_comment(event_id):
+    form = CommentForm()
+    if form.validate_on_submit():
+        comment = Comment(
+            content=form.text.data,
+            event_id=event_id,
+            user_id=current_user.id
+        )
+        db.session.add(comment)
+        db.session.commit()
+        flash('Комментарий успешно добавлен')
+        return redirect('event.index')
+    return render_template('event/form_add_comment.html', form=form)
 
 
 @blueprint.route('/event/<int:event_id>')  # проверка по id

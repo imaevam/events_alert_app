@@ -1,9 +1,11 @@
 from flask import Blueprint, flash, request, render_template, redirect, url_for
 from flask_login import current_user, login_user, logout_user
 from flask_mail import Mail, Message
+# import request
 import sqlite3
 
 from ..email import sender
+from ..config import DB_PATH
 from webapp.models import db
 from webapp.user.forms import LoginForm, RegistrationForm
 from webapp.user.models import User, UserEvents
@@ -76,11 +78,10 @@ def subscription():
     try:
         user_sub_events_id = [x.event_id for x in  UserEvents.query.filter(UserEvents.user_id == current_user.id).all()]
         events = Event.query.filter(Event.id.in_(user_sub_events_id)).all()
-        return render_template('event/index.html', events=events, user_events=user_sub_events_id) 
+        return render_template('event/index.html', events=events) 
     except:
         title = 'Куда сходить и чем заняться в Москве'
         events = Event.query.order_by(Event.date_start).all()
-        flash('Вы не подписаны не на одно событие. Подпишитесь!')
         return render_template('event/index.html', page_title=title, events=events)
 
 
@@ -102,4 +103,3 @@ def forgot():
             return redirect(url_for('user.login'))
     else:
         return render_template('user/reset_password.html')
-        

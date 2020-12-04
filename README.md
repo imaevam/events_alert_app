@@ -4,6 +4,8 @@ Have you ever wanted to go to Python Meetup or some conferencies, but realized i
 
 You can customize the system to work the way you want, and maybe even allow other people to make their own alerts by making this a website. Try it and you will keep in touch with your most favorite events.
 
+![Screenshot](1.png)
+
 ## Installation
 
 Clone this repository https://github.com/imaevam/events_alert_app.git
