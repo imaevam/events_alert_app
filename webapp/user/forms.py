@@ -37,3 +37,4 @@ class RegistrationForm(FlaskForm):
         if user_count > 0:
             raise ValidationError("Пользователь с такой электронной почтой уже зарегистрирован")
 
+

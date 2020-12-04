@@ -55,4 +55,3 @@ class UserEvents(Model):  # Subscription
     def __repr__(self):
         return 'Subscribe={}'.format(self.id)
 
-
