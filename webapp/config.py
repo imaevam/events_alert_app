@@ -12,6 +12,6 @@ REMEMBER_COOKIE_DURATION = timedelta(days=5)  # Длительность сох�
 MAIL_SERVER = 'smtp.gmail.com'
 MAIL_PORT = 587
 MAIL_USE_TLS = True
-MAIL_USERNAME = "getdatafromdb@gmail.com"
-MAIL_PASSWORD = 'ehehoz99'
-DB_PATH = r"C:\projects\final\events_alert_app\events_alert_app\webapp.db"
+MAIL_USERNAME = "Ваша почта"
+MAIL_PASSWORD = 'Пароль от почты'
+DB_PATH = r"C:\projects\final\events_alert_app\events_alert_app\webapp.db"  # путь к базе данных
