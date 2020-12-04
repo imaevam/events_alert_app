@@ -42,7 +42,7 @@ def add_comment(event_id):
         db.session.commit()
         flash('Комментарий успешно добавлен')
         return redirect('event.index')
-    return render_template('event/form_add_comment.html', form=form)
+    # return render_template('event/form_add_comment.html', form=form) 
 
 
 @blueprint.route('/event/<int:event_id>')  # проверка по id
