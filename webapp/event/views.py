@@ -18,7 +18,6 @@ blueprint = Blueprint('event', __name__)
 def index():    
     title = 'Куда сходить и чем заняться в Москве'
     events = Event.query.order_by(Event.date_start).all()
-    #user_sub_events_id = [x.event_id for x in  UserEvents.query.filter(UserEvents.user_id == current_user.id).all()]
     return render_template('event/index.html', page_title=title, events=events)     
 
 
