@@ -15,7 +15,7 @@ blueprint = Blueprint('event', __name__)
 
 
 @blueprint.route('/')
-def index():    
+def index():
     title = 'Куда сходить и чем заняться в Москве'
     events = Event.query.order_by(Event.date_start).all()
     return render_template('event/index.html', page_title=title, events=events)     
@@ -75,15 +75,11 @@ def unsubscribe_event(event_id):
     else:
         return redirect(url_for('event.index'))
 
-
-@blueprint.route('/search', methods=['GET'])
-def search_results():
-    search = SearchForm()
+@blueprint.route('/search', methods=['POST'])
+def search():
+    form = SearchForm(request.form)
     search_str = f"%{search.search.data}%"
-    if search.validate_on_submit():
-        search_result_data = get_data_from_db_by_search(search_str)  # list
-        return render_template('event/search_results.html', event=search_result_data, search_str=search_str)
-    else:
-        flash(f'По результатам поиска {search_str} ничего не было найдено')
-        return redirect(url_for('event.index'))
-
+    if form.validate_on_submit():
+        search_result_data = get_data_from_db_by_search(search_str)
+        return render_template('event/search_results.html', form=form, search_result_data=search_result_data, search_str=search_str)
+    return render_template('event/index.html', form=form)

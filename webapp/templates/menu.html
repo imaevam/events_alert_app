@@ -19,16 +19,17 @@
       </li>
     </ul>
     <form class="form-inline my-2 my-lg-0">
-      <form action="{{ url_for('event.search_results') }}" class="col s12" method="GET">
+      <form method="POST" action="{{ url_for('event.search') }}" class="col s12" name='search'>
         <div class="row">
-            <div class="input-field col s10">
-                <input class="form-control mr-sm-2" placeholder="Поиск по событиям" id="search_string" name="search_string" type="search" class="validate" required>
+          <div class="input-field col s10">
+            <input class="form-control mr-sm-2" placeholder="Поиск по событиям" id="search_string" name="search_string" type="search" class="validate" required>
             </div>
             <div class="input-field col s2">
                 <button id="submit" class="btn btn-outline-success my-2 my-sm-0" type="submit" name="submit">Поиск</button>
             </div>
         </div>
       </form>
+
       <ul class="navbar-nav">
           {% if current_user.is_authenticated %}
             <li class="nav-item">
